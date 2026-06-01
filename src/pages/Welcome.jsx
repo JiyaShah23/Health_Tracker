@@ -1,0 +1,456 @@
+import { useNavigate } from 'react-router-dom';
+import { ArrowRight, User, Activity, Moon, Flame, Heart } from 'lucide-react';
+import { useState } from 'react';
+
+const SLIDES = [
+  {
+    title: 'Track Your Health,',
+    highlight: 'Smarter',
+    sub: 'Monitor steps, sleep, and wellness in one simple dashboard',
+  },
+  {
+    title: 'Your Personal',
+    highlight: 'AI Coach',
+    sub: 'Get real-time insights and personalized health recommendations',
+  },
+  {
+    title: 'Reach Your',
+    highlight: 'Wellness Goals',
+    sub: 'Set targets, track progress, and celebrate every milestone',
+  },
+];
+
+const FEATURES = [
+  { icon: Activity, label: 'Activity', color: '#22c55e', bg: '#f0fdf4' },
+  { icon: Moon, label: 'Sleep', color: '#7c3aed', bg: '#f5f3ff' },
+  { icon: Flame, label: 'Calories', color: '#ea580c', bg: '#fff7ed' },
+  { icon: Heart, label: 'Vitals', color: '#e11d48', bg: '#fff1f2' },
+];
+
+export default function Welcome() {
+  const navigate = useNavigate();
+  const [slide, setSlide] = useState(0);
+
+  const handleDotClick = (i) => setSlide(i);
+
+  return (
+    <div className="wlc-page">
+      {/* Background blobs */}
+      <div className="wlc-blob wlc-blob-1" />
+      <div className="wlc-blob wlc-blob-2" />
+      <div className="wlc-blob wlc-blob-3" />
+
+      {/* Header */}
+      <div className="wlc-header">
+        <div className="wlc-logo">
+          <div className="wlc-logo-icon">
+            <Activity size={16} color="white" />
+          </div>
+          <span className="wlc-logo-text">VitalAI</span>
+        </div>
+        <button className="wlc-skip" onClick={() => navigate('/login')}>
+          Skip
+        </button>
+      </div>
+
+      {/* Illustration Card */}
+      <div className="wlc-card-wrap">
+        {/* Floating badge top-right */}
+        <div className="wlc-float wlc-float-tr">
+          <Heart size={13} color="#e11d48" />
+          <span>72 BPM</span>
+        </div>
+        {/* Floating badge bottom-left */}
+        <div className="wlc-float wlc-float-bl">
+          <Moon size={13} color="#7c3aed" />
+          <span>7.5 hrs</span>
+        </div>
+
+        <div className="wlc-img-card">
+          <img
+            src="/yoga.png"
+            alt="Yoga wellness illustration"
+            className="wlc-img"
+            draggable={false}
+          />
+        </div>
+      </div>
+
+      {/* Pagination Dots */}
+      <div className="wlc-dots">
+        {SLIDES.map((_, i) => (
+          <button
+            key={i}
+            className={`wlc-dot ${i === slide ? 'active' : ''}`}
+            onClick={() => handleDotClick(i)}
+            aria-label={`Slide ${i + 1}`}
+          />
+        ))}
+      </div>
+
+      {/* Text */}
+      <div className="wlc-text animate-fade-up" key={slide}>
+        <h1 className="wlc-title">
+          {SLIDES[slide].title}
+          <br />
+          <span className="wlc-highlight">{SLIDES[slide].highlight}</span>
+        </h1>
+        <p className="wlc-sub">{SLIDES[slide].sub}</p>
+      </div>
+
+      {/* Feature Icons */}
+      <div className="wlc-features">
+        {FEATURES.map(({ icon: Icon, label, color, bg }, i) => (
+          <div key={i} className="wlc-feature">
+            <div className="wlc-feature-icon" style={{ background: bg }}>
+              <Icon size={18} color={color} />
+            </div>
+            <span className="wlc-feature-label">{label}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Dividers between features */}
+      {/* CTA Buttons */}
+      <div className="wlc-actions">
+        <button
+          className="wlc-btn-primary"
+          onClick={() => navigate('/signup')}
+          id="welcome-get-started"
+        >
+          Get Started
+          <div className="wlc-btn-arrow">
+            <ArrowRight size={16} color="white" />
+          </div>
+        </button>
+
+        <button
+          className="wlc-btn-secondary"
+          onClick={() => navigate('/login')}
+          id="welcome-login"
+        >
+          <User size={15} color="#4b5563" />
+          I already have an account
+        </button>
+      </div>
+
+      <style>{`
+        .wlc-page {
+          min-height: 100vh;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          background: #f1f7f1;
+          position: relative;
+          overflow: hidden;
+          padding: 0 20px 32px;
+          max-width: 430px;
+          margin: 0 auto;
+        }
+
+        /* Background blobs */
+        .wlc-blob {
+          position: absolute;
+          border-radius: 50%;
+          pointer-events: none;
+          z-index: 0;
+        }
+        .wlc-blob-1 {
+          width: 280px;
+          height: 280px;
+          background: rgba(34, 197, 94, 0.12);
+          top: -80px;
+          left: -80px;
+        }
+        .wlc-blob-2 {
+          width: 200px;
+          height: 200px;
+          background: rgba(134, 239, 172, 0.2);
+          top: 40px;
+          right: -60px;
+        }
+        .wlc-blob-3 {
+          width: 160px;
+          height: 160px;
+          background: rgba(220, 252, 231, 0.5);
+          bottom: 180px;
+          left: -40px;
+        }
+
+        /* Header */
+        .wlc-header {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 52px 0 20px;
+          position: relative;
+          z-index: 2;
+        }
+        .wlc-logo {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+        .wlc-logo-icon {
+          width: 30px;
+          height: 30px;
+          background: linear-gradient(135deg, #22c55e, #16a34a);
+          border-radius: 9px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 4px 12px rgba(34,197,94,0.35);
+        }
+        .wlc-logo-text {
+          font-size: 15px;
+          font-weight: 700;
+          color: #1a2e1a;
+          letter-spacing: -0.2px;
+        }
+        .wlc-skip {
+          font-size: 14px;
+          font-weight: 600;
+          color: #6b7280;
+          background: rgba(255,255,255,0.7);
+          border: none;
+          border-radius: 20px;
+          padding: 6px 16px;
+          cursor: pointer;
+          font-family: 'Inter', sans-serif;
+          transition: all 0.2s;
+          backdrop-filter: blur(8px);
+        }
+        .wlc-skip:hover {
+          background: white;
+          color: #22c55e;
+        }
+
+        /* Illustration Card */
+        .wlc-card-wrap {
+          position: relative;
+          width: 100%;
+          max-width: 300px;
+          margin: 0 auto;
+          z-index: 2;
+        }
+        .wlc-img-card {
+          background: #f5f0e8;
+          border-radius: 28px;
+          overflow: hidden;
+          width: 100%;
+          aspect-ratio: 4/4.2;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 8px 32px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
+          position: relative;
+        }
+        .wlc-img {
+          width: 85%;
+          height: 90%;
+          object-fit: contain;
+          object-position: center bottom;
+          user-select: none;
+        }
+
+        /* Floating badges */
+        .wlc-float {
+          position: absolute;
+          background: white;
+          border-radius: 20px;
+          padding: 7px 12px;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 12px;
+          font-weight: 700;
+          color: #1a2e1a;
+          box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+          z-index: 3;
+          white-space: nowrap;
+          animation: floatBob 3s ease-in-out infinite;
+        }
+        .wlc-float-tr {
+          top: 24px;
+          right: -16px;
+          animation-delay: 0s;
+        }
+        .wlc-float-bl {
+          bottom: 36px;
+          left: -16px;
+          animation-delay: 1.5s;
+        }
+
+        @keyframes floatBob {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-6px); }
+        }
+
+        /* Pagination dots */
+        .wlc-dots {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          margin: 20px 0 18px;
+          z-index: 2;
+        }
+        .wlc-dot {
+          height: 8px;
+          border-radius: 4px;
+          border: none;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          background: rgba(34,197,94,0.25);
+          width: 8px;
+          padding: 0;
+        }
+        .wlc-dot.active {
+          background: #22c55e;
+          width: 24px;
+          box-shadow: 0 0 8px rgba(34,197,94,0.4);
+        }
+
+        /* Text block */
+        .wlc-text {
+          text-align: center;
+          z-index: 2;
+          margin-bottom: 24px;
+        }
+        .wlc-title {
+          font-size: 28px;
+          font-weight: 800;
+          color: #111827;
+          letter-spacing: -0.6px;
+          line-height: 1.2;
+          margin-bottom: 10px;
+        }
+        .wlc-highlight {
+          color: #22c55e;
+          font-weight: 900;
+        }
+        .wlc-sub {
+          font-size: 14px;
+          color: #6b7280;
+          line-height: 1.6;
+          max-width: 270px;
+          margin: 0 auto;
+        }
+
+        /* Feature Icons */
+        .wlc-features {
+          display: flex;
+          align-items: center;
+          gap: 0;
+          width: 100%;
+          max-width: 320px;
+          background: white;
+          border-radius: 20px;
+          padding: 14px 8px;
+          margin-bottom: 28px;
+          box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+          z-index: 2;
+        }
+        .wlc-feature {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 6px;
+          position: relative;
+        }
+        .wlc-feature:not(:last-child)::after {
+          content: '';
+          position: absolute;
+          right: 0;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 1px;
+          height: 32px;
+          background: #e5e7eb;
+        }
+        .wlc-feature-icon {
+          width: 38px;
+          height: 38px;
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .wlc-feature-label {
+          font-size: 11px;
+          font-weight: 600;
+          color: #6b7280;
+          letter-spacing: 0.02em;
+        }
+
+        /* Action Buttons */
+        .wlc-actions {
+          width: 100%;
+          max-width: 340px;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          z-index: 2;
+        }
+        .wlc-btn-primary {
+          width: 100%;
+          background: linear-gradient(135deg, #22c55e, #16a34a);
+          color: white;
+          border: none;
+          border-radius: var(--radius-full, 9999px);
+          padding: 16px 28px;
+          font-size: 15px;
+          font-weight: 700;
+          font-family: 'Inter', sans-serif;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+          transition: all 0.25s;
+          box-shadow: 0 6px 24px rgba(34,197,94,0.4);
+          letter-spacing: 0.01em;
+        }
+        .wlc-btn-primary:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 10px 30px rgba(34,197,94,0.5);
+        }
+        .wlc-btn-primary:active {
+          transform: translateY(0);
+        }
+        .wlc-btn-arrow {
+          width: 28px;
+          height: 28px;
+          background: rgba(255,255,255,0.25);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .wlc-btn-secondary {
+          width: 100%;
+          background: white;
+          color: #4b5563;
+          border: 1.5px solid #e5e7eb;
+          border-radius: var(--radius-full, 9999px);
+          padding: 15px 28px;
+          font-size: 14px;
+          font-weight: 600;
+          font-family: 'Inter', sans-serif;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          transition: all 0.25s;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .wlc-btn-secondary:hover {
+          border-color: #22c55e;
+          color: #22c55e;
+        }
+      `}</style>
+    </div>
+  );
+}
