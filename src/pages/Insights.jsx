@@ -2,6 +2,8 @@ import { useState, useEffect, useContext } from 'react';
 import { Search, Bell, ChevronRight, Play, Clock, TrendingUp, TrendingDown, Check, Trophy, Lock } from 'lucide-react';
 import { AreaChart, Area, ResponsiveContainer, XAxis, CartesianGrid } from 'recharts';
 import { DataContext } from '../App';
+import { getTodayKey, getDateKey, calcSleepHours } from '../utils/dateUtils';
+
 
 /* --- SVG Icons --- */
 const IconWalk = ({ color = "currentColor", size = 16 }) => (
@@ -49,23 +51,15 @@ export default function Insights() {
 
   const chartDays = activeFilter === 'Week' ? 7 : activeFilter === 'Month' ? 30 : 90;
 
+  const todayKey = getTodayKey();
+
   const chartData = Array.from({ length: chartDays }, (_, i) => {
     const d = new Date();
     d.setDate(d.getDate() - (chartDays - 1 - i));
-    const key = new Date(d.getTime() - d.getTimezoneOffset() * 60000)
-      .toISOString().split('T')[0];
+    const key = getDateKey(chartDays - 1 - i);
     const entry = logData[key] || {};
     const steps = entry.steps || 0;
-    const sleep = entry.sleepStart && entry.sleepEnd
-      ? (() => {
-          const [sh, sm] = entry.sleepStart.split(':').map(Number);
-          const [eh, em] = entry.sleepEnd.split(':').map(Number);
-          const diff = (eh*60+em) < (sh*60+sm)
-            ? (1440 - sh*60 - sm + eh*60 + em)
-            : (eh*60+em - sh*60 - sm);
-          return parseFloat((diff / 60).toFixed(1));
-        })()
-      : 0;
+    const sleep = calcSleepHours(entry.sleepStart, entry.sleepEnd) || 0;
     const cal = entry.calories || 0;
 
     // Calculate a realistic health score between 60 and 95

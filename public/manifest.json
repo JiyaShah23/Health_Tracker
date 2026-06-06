@@ -1,0 +1,18 @@
+{
+  "name": "VitalAI",
+  "short_name": "VitalAI",
+  "description": "Your AI-powered health and wellness coach",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f0fdf4",
+  "theme_color": "#4a7c59",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

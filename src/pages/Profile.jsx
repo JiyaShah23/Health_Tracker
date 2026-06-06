@@ -1,6 +1,8 @@
 import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext, DataContext } from '../App';
+import { AuthContext, DataContext, ThemeContext } from '../App';
+import { getTodayKey, calcSleepHours } from '../utils/dateUtils';
+
 import { 
   ArrowLeft, Edit3, Mail, Phone, Calendar, 
   Bell, Shield, Globe, Lock, LogOut, ChevronRight 
@@ -10,9 +12,9 @@ export default function Profile() {
   const navigate = useNavigate();
   const { user, setUser } = useContext(AuthContext);
   const { logData } = useContext(DataContext);
+  const { theme, toggleTheme } = useContext(ThemeContext);
 
-  const todayKey = new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
-    .toISOString().split('T')[0];
+  const todayKey = getTodayKey();
   const todayEntry = logData[todayKey] || {};
 
   const displayName = user?.name || 'User';
@@ -126,14 +128,7 @@ export default function Profile() {
             { label: 'Steps', value: todayEntry.steps ? todayEntry.steps.toLocaleString() : '—', unit: 'steps' },
             { label: 'Water', value: todayEntry.water ? (todayEntry.water / 1000).toFixed(1) : '—', unit: 'L' },
             { label: 'Calories', value: todayEntry.calories || '—', unit: 'kcal' },
-            { label: 'Sleep', value: todayEntry.sleepStart && todayEntry.sleepEnd
-                ? (() => {
-                    const [sh,sm] = todayEntry.sleepStart.split(':').map(Number);
-                    const [eh,em] = todayEntry.sleepEnd.split(':').map(Number);
-                    const diff = (eh*60+em) < (sh*60+sm) ? (1440-sh*60-sm+eh*60+em) : (eh*60+em-sh*60-sm);
-                    return (diff/60).toFixed(1);
-                  })()
-                : '—', unit: 'hrs' },
+            { label: 'Sleep', value: calcSleepHours(todayEntry.sleepStart, todayEntry.sleepEnd) ?? '—', unit: 'hrs' },
           ].map((item, i) => (
             <div key={i}>
               <div className="prof-list-item">
@@ -160,6 +155,16 @@ export default function Profile() {
               <span>Notifications</span>
             </div>
             <Toggle on={notifOn} onToggle={() => setNotifOn(!notifOn)} />
+          </div>
+          <div className="prof-list-sep" />
+          <div className="prof-list-item">
+            <div className="prof-item-left">
+              <div className="prof-item-icon">
+                {theme === 'dark' ? '🌙' : '☀️'}
+              </div>
+              <span>Dark Mode</span>
+            </div>
+            <Toggle on={theme === 'dark'} onToggle={toggleTheme} />
           </div>
           <div className="prof-list-sep" />
           <div className="prof-list-item clickable">

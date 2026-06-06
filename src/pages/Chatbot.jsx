@@ -2,6 +2,8 @@
 import { useState, useRef, useEffect, useContext } from 'react';
 import { Send, Mic, Sparkles, RefreshCw } from 'lucide-react';
 import { DataContext, AuthContext } from '../App';
+import { getTodayKey, calcSleepHours } from '../utils/dateUtils';
+
 
 
 function VitaIcon({ size = 24 }) {
@@ -116,20 +118,10 @@ export default function Chatbot() {
   const { logData } = useContext(DataContext);
   const { user } = useContext(AuthContext);
 
-  const todayKey = new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
-    .toISOString().split('T')[0];
+  const todayKey = getTodayKey();
   const entry = logData[todayKey] || {};
 
-  const sleepHours = entry.sleepStart && entry.sleepEnd
-    ? (() => {
-      const [sh, sm] = entry.sleepStart.split(':').map(Number);
-      const [eh, em] = entry.sleepEnd.split(':').map(Number);
-      const diff = (eh * 60 + em) < (sh * 60 + sm)
-        ? (1440 - sh * 60 - sm + eh * 60 + em)
-        : (eh * 60 + em - sh * 60 - sm);
-      return diff / 60;
-    })()
-    : null;
+  const sleepHours = calcSleepHours(entry.sleepStart, entry.sleepEnd);
 
   const stats = {
     steps: entry.steps || 0,

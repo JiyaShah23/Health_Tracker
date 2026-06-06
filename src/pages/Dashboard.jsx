@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { AuthContext, DataContext } from '../App';
 import { Bell, ChevronDown, Flame, Moon, Droplets } from 'lucide-react';
 import { AreaChart, Area, ResponsiveContainer, XAxis, Tooltip, CartesianGrid } from 'recharts';
+import { getTodayKey, getDateKey, calcSleepHours, formatSleepHours } from '../utils/dateUtils';
+
 
 /* ── Custom CountUp Hook ── */
 function useCountUp(end, duration = 600) {
@@ -38,8 +40,8 @@ function MiniCalendar({ selectedDate, onSelect }) {
 
   const numDays = getDaysInMonth(viewDate.getFullYear(), viewDate.getMonth());
   const firstDay = getFirstDayOfMonth(viewDate.getFullYear(), viewDate.getMonth());
-  const dates = Array.from({length: numDays}, (_, i) => i + 1);
-  const blanks = Array.from({length: firstDay}, (_, i) => i);
+  const dates = Array.from({ length: numDays }, (_, i) => i + 1);
+  const blanks = Array.from({ length: firstDay }, (_, i) => i);
 
   const prevMonth = () => setViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1));
   const nextMonth = () => setViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1));
@@ -57,8 +59,8 @@ function MiniCalendar({ selectedDate, onSelect }) {
         {dates.map(d => {
           const isSelected = d === selectedDate.getDate() && viewDate.getMonth() === selectedDate.getMonth() && viewDate.getFullYear() === selectedDate.getFullYear();
           return (
-            <button 
-              key={d} 
+            <button
+              key={d}
               className={`db-cal-day ${isSelected ? 'active' : ''}`}
               onClick={() => onSelect(new Date(viewDate.getFullYear(), viewDate.getMonth(), d))}
             >
@@ -71,6 +73,25 @@ function MiniCalendar({ selectedDate, onSelect }) {
   );
 }
 
+function InsightCard({ icon, title, badge, badgeColor, badgeBg, text, className }) {
+  const [expanded, setExpanded] = useState(false);
+  return (
+    <div className={`db-insight-card ${className}`} onClick={() => setExpanded(!expanded)}>
+      <div className="db-insight-icon" style={{ background: badgeBg, color: badgeColor }}>
+        {icon}
+      </div>
+      <div className="db-insight-content">
+        <div className="db-insight-top">
+          <strong>{title}</strong>
+          <span className="db-insight-badge" style={{ background: badgeBg, color: badgeColor }}>{badge}</span>
+        </div>
+        {expanded && <p className="db-insight-text">{text}</p>}
+      </div>
+      <ChevronDown size={16} color="#9ca3af" style={{ transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }} />
+    </div>
+  );
+}
+
 export default function Dashboard() {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
@@ -79,10 +100,27 @@ export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('Steps');
   const [isCalOpen, setIsCalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date()); // Defaults to today
-  
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     setLoaded(true);
   }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 600);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (!isCalOpen) return;
+    const handleOutsideClick = (e) => {
+      if (!e.target.closest('.db-cal-dropdown') && !e.target.closest('.db-date-btn')) {
+        setIsCalOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleOutsideClick);
+    return () => document.removeEventListener('mousedown', handleOutsideClick);
+  }, [isCalOpen]);
 
   const quickAddWater = (ml) => {
     const current = logData[selectedKey] || {};
@@ -104,42 +142,23 @@ export default function Dashboard() {
   const selectedKey = new Date(selectedDate.getTime() - (selectedDate.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
   const currentData = logData[selectedKey] || {};
 
-  const targetSteps    = currentData.steps    || 0;
+  const targetSteps = currentData.steps || 0;
   const targetConsumed = currentData.calories || 0;
-  const targetWater    = currentData.water    || 0;
-  const targetBurned   = currentData.burned   || 0;
-  const sleepHours     = currentData.sleepStart && currentData.sleepEnd
-    ? (() => {
-        const [sh, sm] = currentData.sleepStart.split(':').map(Number);
-        const [eh, em] = currentData.sleepEnd.split(':').map(Number);
-        const startMins = sh * 60 + sm;
-        const endMins   = eh * 60 + em;
-        const diff = endMins < startMins ? (1440 - startMins + endMins) : (endMins - startMins);
-        return diff / 60;
-      })()
-    : null;
+  const targetWater = currentData.water || 0;
+  const targetBurned = currentData.burned || 0;
+  const sleepHours = calcSleepHours(currentData.sleepStart, currentData.sleepEnd);
 
   const weeklyData = (() => {
-    const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     return Array.from({ length: 7 }, (_, i) => {
       const d = new Date();
       d.setDate(d.getDate() - (6 - i));
-      const key = new Date(d.getTime() - d.getTimezoneOffset() * 60000)
-        .toISOString().split('T')[0];
+      const key = getDateKey(6 - i);
       const entry = logData[key] || {};
       return {
         day: days[d.getDay()],
         Steps: entry.steps || 0,
-        Sleep: entry.sleepStart && entry.sleepEnd
-          ? (() => {
-              const [sh,sm] = entry.sleepStart.split(':').map(Number);
-              const [eh,em] = entry.sleepEnd.split(':').map(Number);
-              const diff = (eh*60+em) < (sh*60+sm)
-                ? (1440 - sh*60 - sm + eh*60 + em)
-                : (eh*60+em - sh*60 - sm);
-              return parseFloat((diff/60).toFixed(1));
-            })()
-          : 0,
+        Sleep: calcSleepHours(entry.sleepStart, entry.sleepEnd) || 0,
         Cal: entry.calories || 0,
       };
     });
@@ -151,7 +170,7 @@ export default function Dashboard() {
 
   const dashoffset = loaded ? (1 - Math.min(targetSteps / 10000, 1)) * 251.2 : 251.2;
 
-  const dateStr = selectedDate.getDate() === new Date().getDate() && selectedDate.getMonth() === new Date().getMonth() 
+  const dateStr = selectedDate.getDate() === new Date().getDate() && selectedDate.getMonth() === new Date().getMonth()
     ? `Today, ${selectedDate.toLocaleString('default', { month: 'short' })} ${selectedDate.getDate()}`
     : `${selectedDate.toLocaleString('default', { month: 'short' })} ${selectedDate.getDate()}`;
 
@@ -161,7 +180,7 @@ export default function Dashboard() {
       <div className={`db-header ${loaded ? 'fade-in' : 'hidden'}`}>
         <div style={{ position: 'relative' }}>
           <h1 className="db-title">My Wellness</h1>
-          <button className="db-date-btn" onClick={() => navigate('/log')}>
+          <button className="db-date-btn" onClick={() => setIsCalOpen(prev => !prev)}>
             <span style={{ color: 'var(--primary)' }}>📅</span> {dateStr}
             <ChevronDown size={14} color="#6b7280" />
           </button>
@@ -179,159 +198,159 @@ export default function Dashboard() {
       </div>
 
       <div className="db-scroll-content">
-        {/* Row 1: Steps & Sleep */}
-        <div className="db-grid-2">
-          {/* Steps Card */}
-          <div className="db-card stagger-1">
-            <div className="db-card-top">
-              <span className="db-card-label">STEPS</span>
-              <div className="db-icon-wrap" style={{ background: 'var(--primary-bg)' }}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M13 4v16"/><path d="M17 4v16"/><path d="M19 8H5"/></svg>
+        <div className={`metric-grid ${loading ? 'skeleton' : ''}`}>
+          {/* Row 1: Steps & Sleep */}
+          <div className="db-grid-2">
+            {/* Steps Card */}
+            <div className="db-card stagger-1">
+              <div className="db-card-top">
+                <span className="db-card-label">STEPS</span>
+                <div className="db-icon-wrap" style={{ background: 'var(--primary-bg)' }}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M13 4v16" /><path d="M17 4v16" /><path d="M19 8H5" /></svg>
+                </div>
               </div>
-            </div>
-            
-            <div className="db-ring-wrap">
-              <svg width="100" height="100" viewBox="0 0 100 100" className="db-ring-svg">
-                <circle cx="50" cy="50" r="40" fill="none" stroke="var(--primary-bg)" strokeWidth="8" />
-                <circle cx="50" cy="50" r="40" fill="none" stroke="var(--primary-light)" strokeWidth="8"
-                  strokeLinecap="round" strokeDasharray="251.2" strokeDashoffset={dashoffset}
-                  transform="rotate(-90 50 50)" className="db-ring-progress" />
-              </svg>
-              <div className="db-ring-text">
-                <span className="db-ring-val">{stepsCount.toLocaleString()}</span>
-                <span className="db-ring-max">/ 10,000</span>
+
+              <div className="db-ring-wrap">
+                <svg width="100" height="100" viewBox="0 0 100 100" className="db-ring-svg">
+                  <circle cx="50" cy="50" r="40" fill="none" stroke="var(--primary-bg)" strokeWidth="8" />
+                  <circle cx="50" cy="50" r="40" fill="none" stroke="var(--primary-light)" strokeWidth="8"
+                    strokeLinecap="round" strokeDasharray="251.2" strokeDashoffset={dashoffset}
+                    transform="rotate(-90 50 50)" className="db-ring-progress" />
+                </svg>
+                <div className="db-ring-text">
+                  <span className="db-ring-val">{stepsCount.toLocaleString()}</span>
+                  <span className="db-ring-max">/ 10,000</span>
+                </div>
               </div>
-            </div>
 
-            <div className="db-streak-pill">
-              <Flame size={12} fill="var(--primary-light)" color="var(--primary-light)" />
-              <span>5 day streak</span>
-            </div>
-            <p className="db-card-foot">
-              {targetSteps > 0
-                ? `${Math.min(100, Math.round((targetSteps / 10000) * 100))}% of daily goal`
-                : 'No steps logged yet'}
-            </p>
-          </div>
-
-          {/* Sleep Card */}
-          <div className="db-card stagger-2">
-            <div className="db-card-top">
-              <span className="db-card-label">SLEEP</span>
-              <div className="db-icon-wrap" style={{ background: '#f5f3ff' }}>
-                <Moon size={14} fill="#6366f1" color="#6366f1" />
+              <div className="db-streak-pill">
+                <Flame size={12} fill="var(--primary-light)" color="var(--primary-light)" />
+                <span>5 day streak</span>
               </div>
-            </div>
-
-            <div className="db-sleep-main">
-              <h3 className="db-sleep-val">
-                {sleepHours != null
-                  ? `${Math.floor(sleepHours)}h ${Math.round((sleepHours % 1) * 60)}m`
-                  : '—'}
-              </h3>
-              <p className="db-sleep-sub">
-                {currentData.sleepStart && currentData.sleepEnd
-                  ? `${currentData.sleepStart} – ${currentData.sleepEnd}`
-                  : 'Not logged yet'}
+              <p className="db-card-foot">
+                {targetSteps > 0
+                  ? `${Math.min(100, Math.round((targetSteps / 10000) * 100))}% of daily goal`
+                  : 'No steps logged yet'}
               </p>
             </div>
 
-            <div className="db-sleep-score">
-              <div className="db-score-circ">
-                {sleepHours != null ? Math.min(100, Math.round((sleepHours / 8) * 100)) : '—'}
+            {/* Sleep Card */}
+            <div className="db-card stagger-2">
+              <div className="db-card-top">
+                <span className="db-card-label">SLEEP</span>
+                <div className="db-icon-wrap" style={{ background: '#f5f3ff' }}>
+                  <Moon size={14} fill="#6366f1" color="#6366f1" />
+                </div>
               </div>
-              <div className="db-score-text">
-                <strong>Sleep Score</strong>
-                <span>
-                  {sleepHours == null ? 'No data'
-                    : sleepHours >= 8 ? 'Excellent'
-                    : sleepHours >= 7 ? 'Good'
-                    : sleepHours >= 6 ? 'Fair'
-                    : 'Poor'}
-                </span>
-              </div>
-            </div>
 
-            <div className="db-sleep-stages">
-              <span className="db-stages-lbl">Sleep stages</span>
-              <div className="db-stage-bars">
-                <div className="db-sbar" style={{ height: '60%', animationDelay: '0.1s' }} />
-                <div className="db-sbar" style={{ height: '40%', animationDelay: '0.14s' }} />
-                <div className="db-sbar" style={{ height: '80%', animationDelay: '0.18s' }} />
-                <div className="db-sbar" style={{ height: '50%', animationDelay: '0.22s' }} />
+              <div className="db-sleep-main">
+                <h3 className="db-sleep-val">
+                  {formatSleepHours(sleepHours)}
+                </h3>
+                <p className="db-sleep-sub">
+                  {currentData.sleepStart && currentData.sleepEnd
+                    ? `${currentData.sleepStart} – ${currentData.sleepEnd}`
+                    : 'Not logged yet'}
+                </p>
+              </div>
+
+              <div className="db-sleep-score">
+                <div className="db-score-circ">
+                  {sleepHours != null ? Math.min(100, Math.round((sleepHours / 8) * 100)) : '—'}
+                </div>
+                <div className="db-score-text">
+                  <strong>Sleep Score</strong>
+                  <span>
+                    {sleepHours == null ? 'No data'
+                      : sleepHours >= 8 ? 'Excellent'
+                        : sleepHours >= 7 ? 'Good'
+                          : sleepHours >= 6 ? 'Fair'
+                            : 'Poor'}
+                  </span>
+                </div>
+              </div>
+
+              <div className="db-sleep-stages">
+                <span className="db-stages-lbl">Sleep stages</span>
+                <div className="db-stage-bars">
+                  <div className="db-sbar" style={{ height: '60%', animationDelay: '0.1s' }} />
+                  <div className="db-sbar" style={{ height: '40%', animationDelay: '0.14s' }} />
+                  <div className="db-sbar" style={{ height: '80%', animationDelay: '0.18s' }} />
+                  <div className="db-sbar" style={{ height: '50%', animationDelay: '0.22s' }} />
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Calories Card */}
-        {/* Calories & Water Row */}
-        <div className="db-grid-2" style={{ marginTop: 14 }}>
           {/* Calories Card */}
-          <div className="db-card stagger-3" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-            <div className="db-card-top" style={{ marginBottom: 12 }}>
-              <div className="db-cal-title">
-                <div className="db-icon-wrap" style={{ background: '#fff7ed' }}>
-                  <Flame size={14} fill="#ea580c" color="#ea580c" />
+          {/* Calories & Water Row */}
+          <div className="db-grid-2" style={{ marginTop: 14 }}>
+            {/* Calories Card */}
+            <div className="db-card stagger-3" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <div className="db-card-top" style={{ marginBottom: 12 }}>
+                <div className="db-cal-title">
+                  <div className="db-icon-wrap" style={{ background: '#fff7ed' }}>
+                    <Flame size={14} fill="#ea580c" color="#ea580c" />
+                  </div>
+                  <span className="db-card-title" style={{ fontSize: '14px' }}>Calories</span>
                 </div>
-                <span className="db-card-title" style={{ fontSize: '14px' }}>Calories</span>
+                <span className="db-card-sub" style={{ fontSize: '11px' }}>{dateStr.replace('Today, ', '')}</span>
               </div>
-              <span className="db-card-sub" style={{ fontSize: '11px' }}>{dateStr.replace('Today, ', '')}</span>
+
+              <div style={{ margin: '8px 0' }}>
+                <div className="db-dot-label" style={{ marginBottom: 2 }}><span className="db-dot" style={{ background: 'var(--primary-light)' }} /> Consumed</div>
+                <div className="db-cal-val" style={{ fontSize: '16px' }}><strong>{consumedCount.toLocaleString()}</strong> <span style={{ fontSize: '10px' }}>kcal</span></div>
+
+                <div className="db-dot-label" style={{ marginTop: 8, marginBottom: 2 }}><span className="db-dot" style={{ background: '#f97316' }} /> Burned</div>
+                <div className="db-cal-val" style={{ fontSize: '16px' }}><strong>{burnedCount}</strong> <span style={{ fontSize: '10px' }}>kcal</span></div>
+              </div>
+
+              <div className="db-prog-label" style={{ marginTop: 8, fontSize: '10px' }}>
+                <span>Net: {targetConsumed - targetBurned} kcal</span>
+              </div>
+              <div className="db-cal-bar" style={{ height: '6px', margin: '4px 0' }}>
+                <div className="db-cal-fill-c" style={{ width: loaded ? `${Math.min(((targetConsumed - targetBurned) / 2000) * 100, 100)}%` : '0%' }} />
+              </div>
+              <p className="db-card-foot" style={{ marginTop: 4 }}>Goal: 2,000 kcal</p>
             </div>
 
-            <div style={{ margin: '8px 0' }}>
-              <div className="db-dot-label" style={{ marginBottom: 2 }}><span className="db-dot" style={{ background: 'var(--primary-light)' }}/> Consumed</div>
-              <div className="db-cal-val" style={{ fontSize: '16px' }}><strong>{consumedCount.toLocaleString()}</strong> <span style={{ fontSize: '10px' }}>kcal</span></div>
-              
-              <div className="db-dot-label" style={{ marginTop: 8, marginBottom: 2 }}><span className="db-dot" style={{ background: '#f97316' }}/> Burned</div>
-              <div className="db-cal-val" style={{ fontSize: '16px' }}><strong>{burnedCount}</strong> <span style={{ fontSize: '10px' }}>kcal</span></div>
-            </div>
-
-            <div className="db-prog-label" style={{ marginTop: 8, fontSize: '10px' }}>
-              <span>Net: {targetConsumed - targetBurned} kcal</span>
-            </div>
-            <div className="db-cal-bar" style={{ height: '6px', margin: '4px 0' }}>
-              <div className="db-cal-fill-c" style={{ width: loaded ? `${Math.min(((targetConsumed - targetBurned) / 2000) * 100, 100)}%` : '0%' }} />
-            </div>
-            <p className="db-card-foot" style={{ marginTop: 4 }}>Goal: 2,000 kcal</p>
-          </div>
-
-          {/* Water Card */}
-          <div className="db-card stagger-3" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-            <div className="db-card-top" style={{ marginBottom: 12 }}>
-              <div className="db-cal-title">
-                <div className="db-icon-wrap" style={{ background: '#eff6ff' }}>
-                  <Droplets size={14} color="#3b82f6" fill="#3b82f6" />
+            {/* Water Card */}
+            <div className="db-card stagger-3" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <div className="db-card-top" style={{ marginBottom: 12 }}>
+                <div className="db-cal-title">
+                  <div className="db-icon-wrap" style={{ background: '#eff6ff' }}>
+                    <Droplets size={14} color="#3b82f6" fill="#3b82f6" />
+                  </div>
+                  <span className="db-card-title" style={{ fontSize: '14px' }}>Water</span>
                 </div>
-                <span className="db-card-title" style={{ fontSize: '14px' }}>Water</span>
+                <span className="db-card-sub" style={{ fontSize: '11px' }}>{dateStr.replace('Today, ', '')}</span>
               </div>
-              <span className="db-card-sub" style={{ fontSize: '11px' }}>{dateStr.replace('Today, ', '')}</span>
-            </div>
 
-            <div style={{ margin: '14px 0 10px', textAlign: 'center' }}>
-              <h3 className="db-sleep-val" style={{ color: '#3b82f6', fontSize: '24px' }}>{(targetWater / 1000).toFixed(1)}L</h3>
-              <p className="db-sleep-sub" style={{ fontSize: '11px' }}>Target: 2.5L</p>
-            </div>
+              <div style={{ margin: '14px 0 10px', textAlign: 'center' }}>
+                <h3 className="db-sleep-val" style={{ color: '#3b82f6', fontSize: '24px' }}>{(targetWater / 1000).toFixed(1)}L</h3>
+                <p className="db-sleep-sub" style={{ fontSize: '11px' }}>Target: 2.5L</p>
+              </div>
 
-            {/* Quick add water buttons */}
-            <div style={{ display: 'flex', gap: '6px', marginTop: '8px' }}>
-              <button 
-                onClick={(e) => { e.stopPropagation(); quickAddWater(250); }} 
-                className="db-tab" 
-                style={{ flex: 1, padding: '6px 4px', fontSize: '10px', fontWeight: '700', background: '#eff6ff', color: '#3b82f6', border: 'none', borderRadius: '12px', cursor: 'pointer' }}
-              >
-                +250ml
-              </button>
-              <button 
-                onClick={(e) => { e.stopPropagation(); quickAddWater(500); }} 
-                className="db-tab" 
-                style={{ flex: 1, padding: '6px 4px', fontSize: '10px', fontWeight: '700', background: '#3b82f6', color: 'white', border: 'none', borderRadius: '12px', cursor: 'pointer' }}
-              >
-                +500ml
-              </button>
+              {/* Quick add water buttons */}
+              <div style={{ display: 'flex', gap: '6px', marginTop: '8px' }}>
+                <button
+                  onClick={(e) => { e.stopPropagation(); quickAddWater(250); }}
+                  className="db-tab"
+                  style={{ flex: 1, padding: '6px 4px', fontSize: '10px', fontWeight: '700', background: '#eff6ff', color: '#3b82f6', border: 'none', borderRadius: '12px', cursor: 'pointer' }}
+                >
+                  +250ml
+                </button>
+                <button
+                  onClick={(e) => { e.stopPropagation(); quickAddWater(500); }}
+                  className="db-tab"
+                  style={{ flex: 1, padding: '6px 4px', fontSize: '10px', fontWeight: '700', background: '#3b82f6', color: 'white', border: 'none', borderRadius: '12px', cursor: 'pointer' }}
+                >
+                  +500ml
+                </button>
+              </div>
+
+              <p className="db-card-foot" style={{ marginTop: 10 }}>{Math.round((targetWater / 2500) * 100)}% of goal</p>
             </div>
-            
-            <p className="db-card-foot" style={{ marginTop: 10 }}>{Math.round((targetWater / 2500) * 100)}% of goal</p>
           </div>
         </div>
 
@@ -360,16 +379,16 @@ export default function Dashboard() {
               <AreaChart data={weeklyData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor={CHART_CONFIGS[activeTab]?.color || 'var(--primary-light)'} stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor={CHART_CONFIGS[activeTab]?.color || 'var(--primary-light)'} stopOpacity={0}/>
+                    <stop offset="5%" stopColor={CHART_CONFIGS[activeTab]?.color || 'var(--primary-light)'} stopOpacity={0.3} />
+                    <stop offset="95%" stopColor={CHART_CONFIGS[activeTab]?.color || 'var(--primary-light)'} stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
                 <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#9ca3af' }} dy={10} />
                 <Tooltip contentStyle={{ borderRadius: 8, border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} />
-                <Area 
+                <Area
                   type="monotone" dataKey={activeTab} stroke={CHART_CONFIGS[activeTab]?.color || 'var(--primary-light)'} strokeWidth={2.5}
-                  fill="url(#chartGrad)" 
+                  fill="url(#chartGrad)"
                   animationDuration={800} animationEasing="ease-out"
                   activeDot={{ r: 5, fill: CHART_CONFIGS[activeTab]?.color || 'var(--primary-light)', stroke: 'white', strokeWidth: 2 }}
                 />
@@ -385,7 +404,7 @@ export default function Dashboard() {
         </div>
 
         <InsightCard
-          icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M13 4v16"/><path d="M17 4v16"/><path d="M19 8H5"/></svg>}
+          icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M13 4v16" /><path d="M17 4v16" /><path d="M19 8H5" /></svg>}
           title={targetSteps >= 10000 ? 'Goal Reached! 🎉' : 'Move More!'}
           badge="Steps"
           badgeColor="var(--primary)" badgeBg="#f0fdf4"
@@ -393,8 +412,8 @@ export default function Dashboard() {
             targetSteps === 0
               ? <>You haven't logged any steps today. Head to <strong>Log</strong> to add them!</>
               : targetSteps >= 10000
-              ? <><strong>Amazing!</strong> You've hit your 10,000 step goal today. Keep it up!</>
-              : <>You're <strong>{(10000 - targetSteps).toLocaleString()} steps</strong> away from your goal. A quick walk could close the gap!</>
+                ? <><strong>Amazing!</strong> You've hit your 10,000 step goal today. Keep it up!</>
+                : <>You're <strong>{(10000 - targetSteps).toLocaleString()} steps</strong> away from your goal. A quick walk could close the gap!</>
           }
           className="green stagger-6"
         />
@@ -408,8 +427,8 @@ export default function Dashboard() {
             targetWater === 0
               ? <>You haven't logged any water today. Tap <strong>+250ml</strong> above to get started.</>
               : targetWater >= 2500
-              ? <><strong>Perfectly hydrated!</strong> You've hit your 2.5L goal today. Great work!</>
-              : <>You've logged <strong>{(targetWater / 1000).toFixed(1)}L</strong> today. Aim for <strong>2.5L</strong> to support your energy and sleep.</>
+                ? <><strong>Perfectly hydrated!</strong> You've hit your 2.5L goal today. Great work!</>
+                : <>You've logged <strong>{(targetWater / 1000).toFixed(1)}L</strong> today. Aim for <strong>2.5L</strong> to support your energy and sleep.</>
           }
           className="purple stagger-7"
         />
@@ -460,8 +479,11 @@ export default function Dashboard() {
         @keyframes popBadge { from { transform: scale(0); } to { transform: scale(1); } }
         .db-avatar {
           width: 36px; height: 36px; border-radius: 50%;
-          background: url('https://i.pravatar.cc/100?img=5') center/cover;
+          background: linear-gradient(135deg, var(--primary), var(--primary-dark));
           cursor: pointer; transition: transform 0.08s;
+          display: flex; align-items: center; justify-content: center;
+          font-size: 14px; font-weight: 800; color: white;
+          font-family: 'Inter', sans-serif;
         }
         .db-avatar:active { transform: scale(0.96); }
 
@@ -590,26 +612,24 @@ export default function Dashboard() {
         .db-insight-badge { font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 8px; }
         .db-insight-text { font-size: 12.5px; color: #6b7280; line-height: 1.5; }
         .db-insight-text strong { color: #374151; }
+        .skeleton {
+          background: linear-gradient(90deg,
+            var(--bg-card) 25%,
+            var(--bg-card-hover) 50%,
+            var(--bg-card) 75%
+          );
+          background-size: 200% 100%;
+          animation: shimmer 1.2s infinite;
+          border-radius: 12px;
+          color: transparent !important;
+        }
+        @keyframes shimmer {
+          0% { background-position: 200% 0; }
+          100% { background-position: -200% 0; }
+        }
       `}</style>
-    </div>
+    </div >
   );
 }
 
-function InsightCard({ icon, title, badge, badgeColor, badgeBg, text, className }) {
-  const [expanded, setExpanded] = useState(false);
-  return (
-    <div className={`db-insight-card ${className}`} onClick={() => setExpanded(!expanded)}>
-      <div className="db-insight-icon" style={{ background: badgeBg, color: badgeColor }}>
-        {icon}
-      </div>
-      <div className="db-insight-content">
-        <div className="db-insight-top">
-          <strong>{title}</strong>
-          <span className="db-insight-badge" style={{ background: badgeBg, color: badgeColor }}>{badge}</span>
-        </div>
-        {expanded && <p className="db-insight-text">{text}</p>}
-      </div>
-      <ChevronDown size={16} color="#9ca3af" style={{ transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }} />
-    </div>
-  );
-}
+

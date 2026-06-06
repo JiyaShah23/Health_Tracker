@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, User, Activity, Moon, Flame, Heart } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 const SLIDES = [
   {
@@ -30,8 +30,47 @@ const FEATURES = [
 export default function Welcome() {
   const navigate = useNavigate();
   const [slide, setSlide] = useState(0);
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
+  const autoPlayRef = useRef(null);
 
-  const handleDotClick = (i) => setSlide(i);
+  // Auto advance slides
+  useEffect(() => {
+    autoPlayRef.current = setInterval(() => {
+      setSlide(prev => (prev + 1) % SLIDES.length);
+    }, 3000);
+    return () => clearInterval(autoPlayRef.current);
+  }, []);
+
+  // Reset timer when user manually changes slide
+  const goToSlide = (i) => {
+    clearInterval(autoPlayRef.current);
+    setSlide(i);
+    autoPlayRef.current = setInterval(() => {
+      setSlide(prev => (prev + 1) % SLIDES.length);
+    }, 3000);
+  };
+
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchMove = (e) => {
+    touchEndX.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    const diff = touchStartX.current - touchEndX.current;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) {
+        // Swiped left — next slide
+        goToSlide((slide + 1) % SLIDES.length);
+      } else {
+        // Swiped right — previous slide
+        goToSlide((slide - 1 + SLIDES.length) % SLIDES.length);
+      }
+    }
+  };
 
   return (
     <div className="wlc-page">
@@ -54,7 +93,12 @@ export default function Welcome() {
       </div>
 
       {/* Illustration Card */}
-      <div className="wlc-card-wrap">
+      <div
+        className="wlc-card-wrap"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
         {/* Floating badge top-right */}
         <div className="wlc-float wlc-float-tr">
           <Heart size={13} color="#e11d48" />
@@ -82,10 +126,16 @@ export default function Welcome() {
           <button
             key={i}
             className={`wlc-dot ${i === slide ? 'active' : ''}`}
-            onClick={() => handleDotClick(i)}
+            onClick={() => goToSlide(i)}
             aria-label={`Slide ${i + 1}`}
           />
         ))}
+      </div>
+      <div className="wlc-progress">
+        <div
+          className="wlc-progress-bar"
+          style={{ width: `${((slide + 1) / SLIDES.length) * 100}%` }}
+        />
       </div>
 
       {/* Text */}
@@ -111,6 +161,17 @@ export default function Welcome() {
       </div>
 
       {/* Dividers between features */}
+      <p style={{
+        fontSize: 12,
+        color: '#9ca3af',
+        fontWeight: 600,
+        letterSpacing: '0.05em',
+        zIndex: 2,
+        marginBottom: -8,
+      }}>
+        {slide + 1} / {SLIDES.length}
+      </p>
+
       {/* CTA Buttons */}
       <div className="wlc-actions">
         <button
@@ -161,6 +222,7 @@ export default function Welcome() {
           background: rgba(34, 197, 94, 0.12);
           top: -80px;
           left: -80px;
+          animation: blobFloat 6s ease-in-out infinite;
         }
         .wlc-blob-2 {
           width: 200px;
@@ -168,6 +230,7 @@ export default function Welcome() {
           background: rgba(134, 239, 172, 0.2);
           top: 40px;
           right: -60px;
+          animation: blobFloat 8s ease-in-out infinite reverse;
         }
         .wlc-blob-3 {
           width: 160px;
@@ -175,6 +238,12 @@ export default function Welcome() {
           background: rgba(220, 252, 231, 0.5);
           bottom: 180px;
           left: -40px;
+          animation: blobFloat 7s ease-in-out infinite 1s;
+        }
+
+        @keyframes blobFloat {
+          0%, 100% { transform: translateY(0) scale(1); }
+          50% { transform: translateY(-20px) scale(1.05); }
         }
 
         /* Header */
@@ -309,6 +378,22 @@ export default function Welcome() {
           background: #22c55e;
           width: 24px;
           box-shadow: 0 0 8px rgba(34,197,94,0.4);
+        }
+        .wlc-progress {
+          width: 120px;
+          height: 3px;
+          background: rgba(34, 197, 94, 0.15);
+          border-radius: 2px;
+          overflow: hidden;
+          z-index: 2;
+          margin-top: -12px;
+          margin-bottom: 6px;
+        }
+        .wlc-progress-bar {
+          height: 100%;
+          background: var(--primary);
+          border-radius: 2px;
+          transition: width 0.3s ease;
         }
 
         /* Text block */

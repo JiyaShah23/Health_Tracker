@@ -1,44 +1,135 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Check, Play, Clock, Flame, Droplets, Moon, BellOff, MapPin, Zap, Pause, X } from 'lucide-react';
+import { DataContext } from '../App';
+import { getTodayKey } from '../utils/dateUtils';
 
-const initialNotifs = [
-  {
-    id: 1, type: 'important', title: 'Hydration is low',
-    text: 'You have only had 0.5L today. Drink water to avoid fatigue.',
-    icon: <Droplets size={16} />, color: '#3b82f6', bg: '#eff6ff',
-    pinned: true, time: '10 min ago'
-  },
-  {
-    id: 2, type: 'action', title: 'Take a short walk',
-    text: 'You are 1500 steps away from your daily goal!',
-    icon: <Flame size={16} />, color: '#ea580c', bg: '#fff7ed',
-    actionText: 'Start Walk', actionType: 'start', time: '1 hr ago'
-  },
-  {
-    id: 3, type: 'action', title: 'Drink water now',
-    text: 'Time for your mid-day hydration.',
-    icon: <Droplets size={16} />, color: '#3b82f6', bg: '#eff6ff',
-    actionText: 'Done', actionType: 'done', time: '2 hrs ago'
-  },
-  {
-    id: 4, type: 'reminder', title: '10:30 PM - Sleep Reminder',
-    text: 'Wind down and prepare for sleep.',
-    icon: <Moon size={16} />, color: '#8b5cf6', bg: '#f5f3ff',
-    time: 'Yesterday'
-  },
-  {
-    id: 5, type: 'adaptive', title: 'Rest Day Focus',
-    text: 'Focus on recovery today. A light 10-min stretch is enough.',
-    icon: <Zap size={16} />, color: '#16a34a', bg: '#f0fdf4',
-    time: 'Yesterday'
-  }
-];
 
 export default function Notifications() {
   const navigate = useNavigate();
   const [mounted, setMounted] = useState(false);
-  const [notifs, setNotifs] = useState(initialNotifs);
+  const { logData } = useContext(DataContext);
+
+  const todayKey = getTodayKey();
+  const entry = logData[todayKey] || {};
+
+  const generateNotifs = () => {
+    const notifs = [];
+    let id = 1;
+
+    // Hydration alert
+    const water = entry.water || 0;
+    if (water < 2500) {
+      notifs.push({
+        id: id++,
+        type: water < 500 ? 'important' : 'action',
+        pinned: water < 500,
+        title: water === 0 ? 'No water logged yet!' : 'Hydration is low',
+        text: water === 0
+          ? 'You haven\'t logged any water today. Start with a glass now!'
+          : `You've had ${(water / 1000).toFixed(1)}L today. Aim for 2.5L to stay energized.`,
+        icon: <Droplets size={16} />,
+        color: '#3b82f6',
+        bg: '#eff6ff',
+        actionText: 'Log Water',
+        actionType: 'done',
+        time: 'Now',
+      });
+    }
+
+    // Steps alert
+    const steps = entry.steps || 0;
+    if (steps < 10000) {
+      notifs.push({
+        id: id++,
+        type: 'action',
+        title: steps === 0 ? 'No steps logged yet!' : 'Keep Moving!',
+        text: steps === 0
+          ? 'Log your steps for today to track your activity.'
+          : `You're ${(10000 - steps).toLocaleString()} steps away from your 10,000 goal!`,
+        icon: <Flame size={16} />,
+        color: '#ea580c',
+        bg: '#fff7ed',
+        actionText: 'Start Walk',
+        actionType: 'start',
+        time: 'Today',
+      });
+    }
+
+    // Sleep reminder
+    const hour = new Date().getHours();
+    if (!entry.sleepStart && hour >= 21) {
+      notifs.push({
+        id: id++,
+        type: 'reminder',
+        title: 'Time to Wind Down',
+        text: 'It\'s getting late. Start your sleep routine for a better tomorrow.',
+        icon: <Moon size={16} />,
+        color: '#8b5cf6',
+        bg: '#f5f3ff',
+        time: 'Tonight',
+      });
+    }
+
+    // Sleep logged — give feedback
+    if (entry.sleepStart && entry.sleepEnd) {
+      const [sh, sm] = entry.sleepStart.split(':').map(Number);
+      const [eh, em] = entry.sleepEnd.split(':').map(Number);
+      const diff = (eh * 60 + em) < (sh * 60 + sm)
+        ? (1440 - sh * 60 - sm + eh * 60 + em)
+        : (eh * 60 + em - sh * 60 - sm);
+      const hrs = diff / 60;
+      if (hrs < 7) {
+        notifs.push({
+          id: id++,
+          type: 'adaptive',
+          title: 'Low Sleep Detected',
+          text: `You only slept ${hrs.toFixed(1)} hours. Consider a short nap or early bedtime tonight.`,
+          icon: <Moon size={16} />,
+          color: '#8b5cf6',
+          bg: '#f5f3ff',
+          time: 'Last night',
+        });
+      }
+    }
+
+    // Calories alert
+    const calories = entry.calories || 0;
+    if (calories === 0 && new Date().getHours() >= 12) {
+      notifs.push({
+        id: id++,
+        type: 'reminder',
+        title: 'Log Your Meals',
+        text: 'You haven\'t logged any calories today. Track your nutrition for better insights.',
+        icon: <Zap size={16} />,
+        color: '#16a34a',
+        bg: '#f0fdf4',
+        time: 'Today',
+      });
+    }
+
+    // All good message
+    if (notifs.length === 0) {
+      notifs.push({
+        id: id++,
+        type: 'adaptive',
+        title: 'You\'re crushing it! 🎉',
+        text: 'All your health metrics look great today. Keep up the amazing work!',
+        icon: <Zap size={16} />,
+        color: '#16a34a',
+        bg: '#f0fdf4',
+        time: 'Now',
+      });
+    }
+
+    return notifs;
+  };
+
+  const [notifs, setNotifs] = useState(() => generateNotifs());
+
+  useEffect(() => {
+    setNotifs(generateNotifs());
+  }, [logData]);
 
   useEffect(() => { setMounted(true); }, []);
 
@@ -60,10 +151,10 @@ export default function Notifications() {
       const snoozedNotif = notifs.find(n => n.id === id);
       setNotifs(prev => prev.map(n => n.id === id ? { ...n, exiting: true } : n));
       setTimeout(() => setNotifs(prev => prev.filter(n => n.id !== id)), 300);
-      
+
       // Simulate 10-minute snooze by returning it after a short demo delay (10s)
       setTimeout(() => {
-        setNotifs(prev => [{...snoozedNotif, exiting: false, time: 'Just now', id: Date.now()}, ...prev]);
+        setNotifs(prev => [{ ...snoozedNotif, exiting: false, time: 'Just now', id: Date.now() }, ...prev]);
       }, 10000);
       return;
     }

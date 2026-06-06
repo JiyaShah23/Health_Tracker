@@ -43,6 +43,31 @@
   --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+[data-theme="dark"] {
+  --primary: #4a7c59;
+  --primary-dark: #2d6a4f;
+  --primary-light: #6b9e7e;
+  --primary-bg: #1a2e1a;
+  --primary-glow: rgba(74, 124, 89, 0.4);
+
+  --bg-base: #0f1710;
+  --bg-surface: #1a2410;
+  --bg-card: #1e2d1e;
+  --bg-card-hover: #243324;
+  --bg-input: #1e2d1e;
+
+  --text-primary: #f0fdf4;
+  --text-secondary: #a3b89a;
+  --text-muted: #6b7c65;
+
+  --border: rgba(255,255,255,0.08);
+  --border-active: rgba(74, 124, 89, 0.6);
+
+  --gradient-card: linear-gradient(145deg, #1e2d1e, #1a2410);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 20px rgba(0,0,0,0.4);
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -495,4 +520,9 @@ body {
 
 .toggle.on::after {
   transform: translateX(20px);
+}
+
+button:active {
+  transform: scale(0.97);
+  transition: transform 0.1s;
 }

@@ -1,25 +1,42 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Home, BarChart2, MessageSquare, User, Plus } from 'lucide-react';
+import { useContext } from 'react';
+import { DataContext } from '../App';
+import { getTodayKey } from '../utils/dateUtils';
+
 
 const LEFT_ITEMS  = [
   { icon: Home,        label: 'Home',     path: '/dashboard' },
   { icon: BarChart2,   label: 'Insights', path: '/insights'  },
 ];
 const RIGHT_ITEMS = [
-  { icon: MessageSquare, label: 'Chat',    path: '/chatbot'  },
-  { icon: User,          label: 'Profile', path: '/profile'  },
+  { icon: MessageSquare, label: 'Chat',    path: '/chatbot', badge: false },
+  { icon: User,          label: 'Profile', path: '/profile', badge: false  },
 ];
 
 export default function BottomNav() {
   const navigate   = useNavigate();
   const { pathname } = useLocation();
+  const { logData } = useContext(DataContext);
+  const todayKey = getTodayKey();
+  const entry = logData[todayKey] || {};
+  const hasAlerts = (entry.water || 0) < 2500 || (entry.steps || 0) < 10000;
 
-  const NavBtn = ({ icon: Icon, label, path }) => {
+  const NavBtn = ({ icon: Icon, label, path, badge }) => {
     const active = pathname === path;
     return (
       <button className={`bnav-item ${active ? 'active' : ''}`}
         onClick={() => navigate(path)} aria-label={label}>
-        <Icon size={21} />
+        <div style={{ position: 'relative', display: 'inline-flex' }}>
+          <Icon size={21} />
+          {badge && (
+            <div style={{
+              position: 'absolute', top: -3, right: -3,
+              width: 8, height: 8, borderRadius: '50%',
+              background: '#ef4444', border: '1.5px solid white'
+            }} />
+          )}
+        </div>
         <span className="bnav-label">{label}</span>
       </button>
     );
@@ -27,7 +44,9 @@ export default function BottomNav() {
 
   return (
     <nav className="bnav">
-      {LEFT_ITEMS.map(i  => <NavBtn key={i.path} {...i} />)}
+      {LEFT_ITEMS.map(i => (
+        <NavBtn key={i.path} {...i} badge={i.path === '/dashboard' && hasAlerts} />
+      ))}
 
       <div className="bnav-center-wrap">
         <button

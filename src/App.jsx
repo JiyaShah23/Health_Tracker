@@ -14,6 +14,7 @@ import './index.css';
 
 export const AuthContext = createContext(null);
 export const DataContext = createContext(null);
+export const ThemeContext = createContext(null);
 
 function AppShell({ children }) {
   return (
@@ -36,6 +37,8 @@ function PublicRoute({ children }) {
   return children;
 }
 
+import ErrorBoundary from './components/ErrorBoundary';
+
 export default function App() {
   const [user, setUser] = useState(() => {
     try {
@@ -54,6 +57,17 @@ export default function App() {
     }
   });
 
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('ht_theme') || 'light';
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('ht_theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => setTheme(prev => prev === 'light' ? 'dark' : 'light');
+
   useEffect(() => {
     if (user) {
       localStorage.setItem('ht_user', JSON.stringify(user));
@@ -67,28 +81,33 @@ export default function App() {
   }, [logData]);
 
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
-      <DataContext.Provider value={{ logData, setLogData }}>
-        <BrowserRouter>
-          <Routes>
-          {/* Public / onboarding */}
-          <Route path="/" element={<Navigate to="/welcome" replace />} />
-          <Route path="/welcome" element={<PublicRoute><Welcome /></PublicRoute>} />
-          <Route path="/login"   element={<PublicRoute><Login /></PublicRoute>} />
-          <Route path="/signup"  element={<PublicRoute><Signup /></PublicRoute>} />
+    <ErrorBoundary>
+      <ThemeContext.Provider value={{ theme, toggleTheme }}>
+        <AuthContext.Provider value={{ user, setUser }}>
+          <DataContext.Provider value={{ logData, setLogData }}>
+            <BrowserRouter>
+              <Routes>
+              {/* Public / onboarding */}
+              <Route path="/" element={<Navigate to="/welcome" replace />} />
+              <Route path="/welcome" element={<PublicRoute><Welcome /></PublicRoute>} />
+              <Route path="/login"   element={<PublicRoute><Login /></PublicRoute>} />
+              <Route path="/signup"  element={<PublicRoute><Signup /></PublicRoute>} />
 
-          {/* Protected app screens */}
-          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-          <Route path="/chatbot"   element={<ProtectedRoute><Chatbot /></ProtectedRoute>} />
-          <Route path="/insights"  element={<ProtectedRoute><Insights /></ProtectedRoute>} />
-          <Route path="/profile"   element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-          <Route path="/log"       element={<ProtectedRoute><Log /></ProtectedRoute>} />
-          <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
+              {/* Protected app screens */}
+              <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+              <Route path="/chatbot"   element={<ProtectedRoute><Chatbot /></ProtectedRoute>} />
+              <Route path="/insights"  element={<ProtectedRoute><Insights /></ProtectedRoute>} />
+              <Route path="/profile"   element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+              <Route path="/log"       element={<ProtectedRoute><Log /></ProtectedRoute>} />
+              <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
 
-          <Route path="*" element={<Navigate to="/welcome" replace />} />
-          </Routes>
-        </BrowserRouter>
-      </DataContext.Provider>
-    </AuthContext.Provider>
+              <Route path="*" element={<Navigate to="/welcome" replace />} />
+              </Routes>
+            </BrowserRouter>
+          </DataContext.Provider>
+        </AuthContext.Provider>
+      </ThemeContext.Provider>
+    </ErrorBoundary>
   );
 }
+

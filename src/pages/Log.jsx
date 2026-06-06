@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DataContext } from '../App';
+import { getTodayKey } from '../utils/dateUtils';
 import { X, Calendar, ChevronDown, Flame, Droplets, Camera } from 'lucide-react';
 
 /* --- SVG Icons --- */
@@ -28,7 +29,7 @@ export default function LogData() {
   const { logData, setLogData } = useContext(DataContext);
   const [mounted, setMounted] = useState(false);
   
-  const todayKey = new Date().toISOString().split('T')[0];
+  const todayKey = getTodayKey();
   const currentData = logData[todayKey] || {};
 
   // States for sliders & interactives
