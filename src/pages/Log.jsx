@@ -374,25 +374,25 @@ export default function LogData() {
 
       <style>{`
         .log-page {
-          min-height: 100vh; background: #f9fbf9; display: flex; flex-direction: column;
+          min-height: 100vh; background: var(--bg-surface); display: flex; flex-direction: column;
           font-family: 'Inter', sans-serif; overflow: hidden;
         }
         /* Sticky Header */
         .log-header {
           display: flex; align-items: center; justify-content: space-between;
-          padding: 48px 20px 16px; background: white; z-index: 10;
+          padding: 48px 20px 16px; background: var(--bg-card); z-index: 10;
           border-bottom: 1px solid rgba(0,0,0,0.04);
           opacity: 0; transform: translateY(-10px); transition: all 0.3s;
         }
         .log-header.fade-in { opacity: 1; transform: translateY(0); }
-        .log-close-btn { width: 32px; height: 32px; border-radius: 50%; background: #f3f4f6; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-        .log-title { font-size: 16px; font-weight: 800; color: #111827; }
+        .log-close-btn { width: 32px; height: 32px; border-radius: 50%; background: var(--bg-input); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .log-title { font-size: 16px; font-weight: 800; color: var(--text-primary); }
         .log-save-btn { background: none; border: none; font-size: 14px; font-weight: 700; color: #4a7c59; cursor: pointer; }
-
+ 
         /* Scroll Area */
         .log-scroll { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 14px; }
-        .log-main-heading { font-size: 22px; font-weight: 800; color: #111827; letter-spacing: -0.4px; margin-bottom: 4px; text-align: center; }
-
+        .log-main-heading { font-size: 22px; font-weight: 800; color: var(--text-primary); letter-spacing: -0.4px; margin-bottom: 4px; text-align: center; }
+ 
         /* Stagger Transitions */
         .stagger-1 { opacity: 0; transform: translateY(15px); transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) 0.05s; }
         .stagger-2 { opacity: 0; transform: translateY(15px); transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s; }
@@ -406,30 +406,30 @@ export default function LogData() {
         .stagger-1.active, .stagger-2.active, .stagger-3.active, .stagger-4.active, .stagger-5.active, .stagger-6.active, .stagger-7.active, .stagger-8.active, .stagger-9.active {
           opacity: 1; transform: translateY(0);
         }
-
+ 
         /* Top elements */
         .log-date-wrap { display: flex; justify-content: center; }
-        .log-date-pill { display: inline-flex; align-items: center; gap: 8px; background: #f3f4f6; border-radius: 20px; padding: 6px 12px; }
+        .log-date-pill { display: inline-flex; align-items: center; gap: 8px; background: var(--bg-input); border-radius: 20px; padding: 6px 12px; }
         .log-date-icon { width: 22px; height: 22px; background: #6b9e7e; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-        .log-date-text { font-size: 13px; font-weight: 700; color: #111827; }
-        
+        .log-date-text { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+         
         .log-types-row { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; }
-        .log-type-btn { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.2s; border: 1.5px solid #e5e7eb; background: white; color: #6b7280; }
+        .log-type-btn { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.2s; border: 1.5px solid var(--border); background: var(--bg-card); color: var(--text-secondary); }
         .log-type-btn.active { background: #6b9e7e; border-color: #6b9e7e; color: white; box-shadow: 0 4px 10px rgba(107,158,126,0.25); }
-
+ 
         /* Cards */
-        .log-card { background: white; border-radius: 20px; padding: 18px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.02); }
+        .log-card { background: var(--bg-card); border-radius: 20px; padding: 18px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.02); }
         .log-card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; }
         .log-card-title { display: flex; align-items: center; gap: 8px; }
         .log-card-icon { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
         .log-card-icon.sm { width: 20px; height: 20px; }
-        .log-card-title h3 { font-size: 15px; font-weight: 800; color: #111827; letter-spacing: -0.2px; }
-        .log-card-val strong { font-size: 22px; font-weight: 800; color: #111827; }
-        .log-card-val span { font-size: 12px; color: #9ca3af; font-weight: 600; }
-
+        .log-card-title h3 { font-size: 15px; font-weight: 800; color: var(--text-primary); letter-spacing: -0.2px; }
+        .log-card-val strong { font-size: 22px; font-weight: 800; color: var(--text-primary); }
+        .log-card-val span { font-size: 12px; color: var(--text-muted); font-weight: 600; }
+ 
         /* Custom Slider (Steps) */
         .log-slider-container { position: relative; height: 24px; display: flex; align-items: center; }
-        .log-slider-track { position: absolute; left: 0; right: 0; height: 6px; background: #f3f4f6; border-radius: 4px; overflow: hidden; pointer-events: none; }
+        .log-slider-track { position: absolute; left: 0; right: 0; height: 6px; background: var(--bg-input); border-radius: 4px; overflow: hidden; pointer-events: none; }
         .log-slider-fill { position: absolute; left: 0; top: 0; bottom: 0; background: #6b9e7e; transition: width 0.1s ease-out; }
         .log-slider-input {
           width: 100%; -webkit-appearance: none; background: transparent; margin: 0; cursor: pointer; position: relative; z-index: 2; height: 24px;
@@ -439,82 +439,82 @@ export default function LogData() {
           -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: white; border: 3px solid #6b9e7e; box-shadow: 0 2px 6px rgba(0,0,0,0.15); transition: transform 0.1s;
         }
         .log-slider-input::-webkit-slider-thumb:active { transform: scale(1.2); }
-        .log-slider-labels { display: flex; justify-content: space-between; margin-top: 8px; font-size: 10px; color: #9ca3af; font-weight: 600; }
+        .log-slider-labels { display: flex; justify-content: space-between; margin-top: 8px; font-size: 10px; color: var(--text-muted); font-weight: 600; }
         .log-slider-labels.sleep { margin-top: 12px; }
-
+ 
         .log-steps-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 20px; }
         .log-pills { display: flex; gap: 8px; flex-wrap: wrap; }
-        .log-pill { padding: 4px 12px; border-radius: 16px; font-size: 11px; font-weight: 600; cursor: pointer; border: 1.5px solid #e5e7eb; background: white; color: #6b7280; transition: all 0.2s; }
+        .log-pill { padding: 4px 12px; border-radius: 16px; font-size: 11px; font-weight: 600; cursor: pointer; border: 1.5px solid var(--border); background: var(--bg-card); color: var(--text-secondary); transition: all 0.2s; }
         .log-pill.active { background: #6b9e7e; border-color: #6b9e7e; color: white; }
         .log-pill.sleep-active { background: #f5f3ff; border: none; color: #6366f1; display: inline-flex; align-items: center; gap: 6px; }
         .log-streak { display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; color: #4a7c59; }
-
+ 
         /* Sleep Visual */
         .log-sleep-labels-top { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 12px; }
-        .log-sl-sm { display: block; font-size: 10px; color: #9ca3af; font-weight: 600; margin-bottom: 2px; }
-        .log-sl-lg { display: block; font-size: 13px; font-weight: 800; color: #111827; }
+        .log-sl-sm { display: block; font-size: 10px; color: var(--text-muted); font-weight: 600; margin-bottom: 2px; }
+        .log-sl-lg { display: block; font-size: 13px; font-weight: 800; color: var(--text-primary); }
         .log-sl-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #6366f1; margin-right: 4px; vertical-align: middle; }
-        
+         
         .log-sleep-track { position: relative; height: 24px; display: flex; align-items: center; }
-        .log-sleep-track::before { content: ''; position: absolute; left: 0; right: 0; height: 6px; background: #f3f4f6; border-radius: 4px; }
+        .log-sleep-track::before { content: ''; position: absolute; left: 0; right: 0; height: 6px; background: var(--bg-input); border-radius: 4px; }
         .log-sleep-fill { position: absolute; height: 6px; background: #6366f1; border-radius: 4px; }
         .log-sleep-handle { position: absolute; width: 16px; height: 16px; background: white; border: 2.5px solid #6366f1; border-radius: 50%; top: 50%; transform: translate(-50%, -50%); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-
+ 
         /* Water */
         .log-water-content { display: flex; gap: 24px; align-items: center; }
         .log-water-ring { position: relative; width: 90px; height: 90px; flex-shrink: 0; }
         .log-water-ring svg { width: 100%; height: 100%; }
         .log-water-val { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .log-water-val strong { font-size: 16px; font-weight: 800; color: #111827; line-height: 1.1; }
-        .log-water-val span { font-size: 10px; font-weight: 600; color: #9ca3af; }
+        .log-water-val strong { font-size: 16px; font-weight: 800; color: var(--text-primary); line-height: 1.1; }
+        .log-water-val span { font-size: 10px; font-weight: 600; color: var(--text-muted); }
         .log-water-info { flex: 1; }
-        .log-water-prog-text { font-size: 11px; color: #6b7280; font-weight: 600; margin-bottom: 6px; }
-        .log-water-bar-track { height: 6px; background: #f3f4f6; border-radius: 3px; overflow: hidden; margin-bottom: 16px; }
+        .log-water-prog-text { font-size: 11px; color: var(--text-secondary); font-weight: 600; margin-bottom: 6px; }
+        .log-water-bar-track { height: 6px; background: var(--bg-input); border-radius: 3px; overflow: hidden; margin-bottom: 16px; }
         .log-water-bar-fill { height: 100%; background: #818cf8; border-radius: 3px; }
-        .log-water-add { font-size: 11px; color: #6b7280; font-weight: 600; margin-bottom: 8px; }
+        .log-water-add { font-size: 11px; color: var(--text-secondary); font-weight: 600; margin-bottom: 8px; }
         .log-water-btns { display: flex; gap: 6px; flex-wrap: wrap; }
-        .log-water-btn { padding: 4px 10px; font-size: 11px; font-weight: 700; border-radius: 16px; border: 1.5px solid #e0e7ff; background: white; color: #6366f1; cursor: pointer; transition: all 0.2s; }
+        .log-water-btn { padding: 4px 10px; font-size: 11px; font-weight: 700; border-radius: 16px; border: 1.5px solid #e0e7ff; background: var(--bg-card); color: #6366f1; cursor: pointer; transition: all 0.2s; }
         .log-water-btn.active { background: #6366f1; border-color: #6366f1; color: white; }
-
+ 
         /* Mood */
         .log-mood-emojis { display: flex; justify-content: space-between; margin-bottom: 20px; }
         .log-mood-item { display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; transition: transform 0.2s; opacity: 0.6; }
         .log-mood-item.active { opacity: 1; transform: scale(1.1); }
-        .log-mood-emoji { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; background: white; border: 2px solid transparent; }
+        .log-mood-emoji { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; background: var(--bg-card); border: 2px solid transparent; }
         .log-mood-item.active .log-mood-emoji { border-color: #22c55e; box-shadow: 0 4px 12px rgba(34,197,94,0.2); }
-        .log-mood-lbl { font-size: 10px; font-weight: 600; color: #6b7280; }
+        .log-mood-lbl { font-size: 10px; font-weight: 600; color: var(--text-secondary); }
         .log-mood-item.active .log-mood-lbl { color: #22c55e; }
-        .log-mood-input { display: flex; align-items: center; gap: 10px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; }
-        .log-mood-input input { border: none; background: transparent; font-size: 13px; color: #111827; flex: 1; outline: none; font-family: 'Inter', sans-serif; }
-        .log-mood-input input::placeholder { color: #9ca3af; }
-
+        .log-mood-input { display: flex; align-items: center; gap: 10px; background: #f9fafb; border: 1px solid var(--border); border-radius: 12px; padding: 12px; }
+        .log-mood-input input { border: none; background: transparent; font-size: 13px; color: var(--text-primary); flex: 1; outline: none; font-family: 'Inter', sans-serif; }
+        .log-mood-input input::placeholder { color: var(--text-muted); }
+ 
         /* Grid / Small Metrics */
         .log-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
         .log-metric-val { margin-bottom: 12px; }
-        .log-metric-val strong { font-size: 32px; font-weight: 800; color: #111827; line-height: 1; }
-        .log-metric-val span { font-size: 16px; color: #6b7280; font-weight: 600; margin-left: 2px; }
+        .log-metric-val strong { font-size: 32px; font-weight: 800; color: var(--text-primary); line-height: 1; }
+        .log-metric-val span { font-size: 16px; color: var(--text-secondary); font-weight: 600; margin-left: 2px; }
         .log-metric-val.sm strong { font-size: 24px; }
         .log-metric-val.sm span { font-size: 12px; margin-left: 4px; }
-        .log-toggle-wrap { display: flex; background: #f3f4f6; border-radius: 20px; padding: 2px; }
-        .log-toggle-btn { flex: 1; padding: 4px 0; font-size: 11px; font-weight: 600; border-radius: 18px; border: none; background: transparent; color: #6b7280; cursor: pointer; transition: all 0.2s; }
+        .log-toggle-wrap { display: flex; background: var(--bg-input); border-radius: 20px; padding: 2px; }
+        .log-toggle-btn { flex: 1; padding: 4px 0; font-size: 11px; font-weight: 600; border-radius: 18px; border: none; background: transparent; color: var(--text-secondary); cursor: pointer; transition: all 0.2s; }
         .log-toggle-btn.active { background: #6b9e7e; color: white; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
-        .log-metric-sub { font-size: 11px; color: #6b7280; font-weight: 600; }
-
+        .log-metric-sub { font-size: 11px; color: var(--text-secondary); font-weight: 600; }
+ 
         /* Meals Grid */
         .log-meals-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; overflow-x: auto; padding-bottom: 8px; }
         .log-meal-btn { display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; }
         .log-meal-icon { width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #4a7c59; }
-        .log-meal-lbl { font-size: 10px; font-weight: 600; color: #111827; }
+        .log-meal-lbl { font-size: 10px; font-weight: 600; color: var(--text-primary); }
         .log-meal-dot { width: 4px; height: 4px; border-radius: 50%; }
-
+ 
         /* Mini Charts */
         .log-mini-chart { display: flex; align-items: flex-end; gap: 3px; height: 30px; margin-top: 12px; }
         .log-bar { width: 6px; border-radius: 3px; background: #e5e7eb; }
         .log-bar.red { background: #fda4af; }
         .log-mini-chart.bp { flex-direction: column; align-items: stretch; justify-content: flex-end; gap: 6px; }
         .log-mini-chart.bp > div { display: flex; align-items: center; gap: 6px; }
-        .log-mini-chart.bp .lbl { font-size: 9px; font-weight: 700; color: #9ca3af; width: 18px; }
-        .log-mini-chart.bp .bar { flex: 1; height: 4px; background: #f3f4f6; border-radius: 2px; }
+        .log-mini-chart.bp .lbl { font-size: 9px; font-weight: 700; color: var(--text-muted); width: 18px; }
+        .log-mini-chart.bp .bar { flex: 1; height: 4px; background: var(--bg-input); border-radius: 2px; }
         .log-mini-chart.bp .fill { height: 100%; background: #a78bfa; border-radius: 2px; }
       `}</style>
     </div>

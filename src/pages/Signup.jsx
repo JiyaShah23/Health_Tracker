@@ -244,7 +244,7 @@ export default function Signup() {
       <style>{`
         .su-page {
           min-height: 100vh;
-          background: #eef5ee;
+          background: var(--bg-surface);
           position: relative;
           overflow: hidden;
           font-family: 'Inter', sans-serif;
@@ -297,11 +297,11 @@ export default function Signup() {
         }
         .su-tagline {
           font-size: 13px;
-          color: #6b7280;
+          color: var(--text-secondary);
           font-weight: 400;
         }
         .su-card {
-          background: white;
+          background: var(--bg-card);
           border-radius: 24px;
           padding: 28px 24px 24px;
           width: 100%;
@@ -310,13 +310,13 @@ export default function Signup() {
         .su-card-title {
           font-size: 22px;
           font-weight: 800;
-          color: #111827;
+          color: var(--text-primary);
           letter-spacing: -0.4px;
           margin-bottom: 4px;
         }
         .su-card-sub {
           font-size: 13px;
-          color: #6b7280;
+          color: var(--text-secondary);
           margin-bottom: 22px;
         }
         .su-form {
@@ -338,7 +338,7 @@ export default function Signup() {
         .su-label {
           font-size: 13px;
           font-weight: 600;
-          color: #374151;
+          color: var(--text-primary);
         }
         .su-input-wrap {
           position: relative;
@@ -365,19 +365,19 @@ export default function Signup() {
         }
         .su-input {
           width: 100%;
-          border: 1.5px solid #e5e7eb;
+          border: 1.5px solid var(--border);
           border-radius: 12px;
           padding: 13px 14px;
           font-size: 14px;
           font-family: 'Inter', sans-serif;
-          color: #111827;
-          background: white;
+          color: var(--text-primary);
+          background: var(--bg-card);
           outline: none;
           transition: border-color 0.2s;
         }
         .su-input.icon-left { padding-left: 42px; }
         .su-input.icon-right { padding-right: 42px; }
-        .su-input::placeholder { color: #9ca3af; }
+        .su-input::placeholder { color: var(--text-muted); }
         .su-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-glow); }
         .su-input.su-err { border-color: #ef4444; }
         .su-ferr { font-size: 11px; color: #ef4444; margin-top: -2px; }
@@ -386,15 +386,15 @@ export default function Signup() {
         .su-bar { flex: 1; height: 4px; border-radius: 2px; transition: background 0.3s; }
         .su-strength-row {
           display: flex; justify-content: space-between;
-          font-size: 11px; color: #6b7280;
+          font-size: 11px; color: var(--text-secondary);
         }
-        .su-hint { font-size: 11px; color: #9ca3af; }
+        .su-hint { font-size: 11px; color: var(--text-muted); }
         .su-terms {
           display: flex;
           align-items: flex-start;
           gap: 10px;
           font-size: 12.5px;
-          color: #374151;
+          color: var(--text-primary);
           line-height: 1.5;
           cursor: pointer;
         }
@@ -433,7 +433,7 @@ export default function Signup() {
           display: flex;
           align-items: center;
           gap: 12px;
-          color: #9ca3af;
+          color: var(--text-muted);
           font-size: 12.5px;
           text-align: center;
         }
@@ -455,21 +455,21 @@ export default function Signup() {
           transition: all 0.2s;
         }
         .su-social-btn.apple {
-          background: white;
-          color: #111827;
-          border: 1.5px solid #e5e7eb;
+          background: var(--bg-card);
+          color: var(--text-primary);
+          border: 1.5px solid var(--border);
         }
         .su-social-btn.apple:hover { background: #f9fafb; }
         .su-social-btn.google {
-          background: white;
-          color: #111827;
-          border: 1.5px solid #e5e7eb;
+          background: var(--bg-card);
+          color: var(--text-primary);
+          border: 1.5px solid var(--border);
         }
         .su-social-btn.google:hover { background: #f9fafb; }
         .su-login-link {
           text-align: center;
           font-size: 13px;
-          color: #6b7280;
+          color: var(--text-secondary);
           margin-top: 4px;
         }
         .su-link-btn {

@@ -310,18 +310,18 @@ export default function Notifications() {
 
       <style>{`
         .notif-page {
-          min-height: 100vh; background: #f9fbf9; display: flex; flex-direction: column;
+          min-height: 100vh; background: var(--bg-surface); display: flex; flex-direction: column;
           font-family: 'Inter', sans-serif; overflow: hidden;
         }
         .notif-header {
           display: flex; align-items: center; justify-content: space-between;
-          padding: 48px 20px 16px; background: white; z-index: 10;
+          padding: 48px 20px 16px; background: var(--bg-card); z-index: 10;
           opacity: 0; transform: translateY(-10px); transition: all 0.3s;
           border-bottom: 1px solid rgba(0,0,0,0.03);
         }
         .notif-header.fade-in { opacity: 1; transform: translateY(0); }
         .notif-back-btn {
-          width: 36px; height: 36px; border-radius: 12px; background: #f3f4f6;
+          width: 36px; height: 36px; border-radius: 12px; background: var(--bg-input);
           border: none; display: flex; align-items: center; justify-content: center;
           cursor: pointer; transition: transform 0.2s;
         }
@@ -341,11 +341,11 @@ export default function Notifications() {
         .stagger-3 { animation-delay: 0.25s; }
         @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
 
-        .notif-sec-title { font-size: 13px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; margin-left: 4px; }
+        .notif-sec-title { font-size: 13px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; margin-left: 4px; }
         .notif-list { display: flex; flex-direction: column; gap: 12px; }
 
         .notif-card {
-          background: white; border-radius: 16px; padding: 14px;
+          background: var(--bg-card); border-radius: 16px; padding: 14px;
           display: flex; gap: 14px; box-shadow: 0 2px 10px rgba(0,0,0,0.02);
           position: relative; transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
           border: 1px solid transparent;
@@ -357,14 +357,14 @@ export default function Notifications() {
 
         .notif-icon-wrap { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .notif-content { flex: 1; display: flex; flex-direction: column; gap: 4px; }
-        .notif-content strong { font-size: 14px; font-weight: 700; color: #111827; line-height: 1.2; }
-        .notif-content p { font-size: 12.5px; color: #4b5563; line-height: 1.4; }
-        .notif-time { font-size: 10px; font-weight: 600; color: #9ca3af; margin-top: 2px; }
+        .notif-content strong { font-size: 14px; font-weight: 700; color: var(--text-primary); line-height: 1.2; }
+        .notif-content p { font-size: 12.5px; color: var(--text-secondary); line-height: 1.4; }
+        .notif-time { font-size: 10px; font-weight: 600; color: var(--text-muted); margin-top: 2px; }
 
         .notif-card.action-card { flex-direction: column; gap: 14px; padding: 16px; }
         .notif-top { display: flex; gap: 14px; }
         .notif-actions { display: flex; gap: 10px; padding-left: 52px; }
-        .btn-snooze { flex: 1; padding: 8px 12px; background: #f3f4f6; border: none; border-radius: 12px; font-size: 12px; font-weight: 600; color: #4b5563; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; transition: background 0.2s; }
+        .btn-snooze { flex: 1; padding: 8px 12px; background: var(--bg-input); border: none; border-radius: 12px; font-size: 12px; font-weight: 600; color: var(--text-secondary); display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; transition: background 0.2s; }
         .btn-snooze:hover { background: #e5e7eb; }
         .btn-primary { flex: 1; padding: 8px 12px; border: none; border-radius: 12px; font-size: 12px; font-weight: 700; color: white; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; transition: transform 0.2s; }
         .btn-primary:active { transform: scale(0.96); }
@@ -373,13 +373,13 @@ export default function Notifications() {
 
         .notif-timer-view { display: flex; flex-direction: column; gap: 16px; align-items: center; padding: 12px 0; }
         .timer-display { display: flex; align-items: center; gap: 12px; }
-        .timer-display strong { font-size: 36px; font-variant-numeric: tabular-nums; font-weight: 800; color: #111827; }
+        .timer-display strong { font-size: 36px; font-variant-numeric: tabular-nums; font-weight: 800; color: var(--text-primary); }
         .timer-controls { display: flex; gap: 10px; width: 100%; }
 
         .notif-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 20px; text-align: center; }
-        .notif-empty-icon { width: 64px; height: 64px; border-radius: 50%; background: #f3f4f6; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
-        .notif-empty h3 { font-size: 16px; font-weight: 700; color: #111827; margin-bottom: 6px; }
-        .notif-empty p { font-size: 13px; color: #6b7280; }
+        .notif-empty-icon { width: 64px; height: 64px; border-radius: 50%; background: var(--bg-input); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+        .notif-empty h3 { font-size: 16px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }
+        .notif-empty p { font-size: 13px; color: var(--text-secondary); }
       `}</style>
     </div>
   );

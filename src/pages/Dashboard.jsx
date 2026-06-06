@@ -188,7 +188,7 @@ export default function Dashboard() {
         </div>
         <div className="db-header-actions">
           <button className="db-bell" aria-label="Notifications" onClick={() => navigate('/notifications')}>
-            <Bell size={18} color="#111827" />
+            <Bell size={18} color="currentColor" />
             <span className="db-bell-dot" />
           </button>
           <div className="db-avatar" onClick={() => navigate('/profile')}>
@@ -205,8 +205,8 @@ export default function Dashboard() {
             <div className="db-card stagger-1">
               <div className="db-card-top">
                 <span className="db-card-label">STEPS</span>
-                <div className="db-icon-wrap" style={{ background: 'var(--primary-bg)' }}>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M13 4v16" /><path d="M17 4v16" /><path d="M19 8H5" /></svg>
+                <div className="db-icon-wrap" style={{ background: '#f0fdf4' }}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4a7c59" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M13 4v16" /><path d="M17 4v16" /><path d="M19 8H5" /></svg>
                 </div>
               </div>
 
@@ -439,7 +439,7 @@ export default function Dashboard() {
       <style>{`
         .db-page {
           min-height: 100vh;
-          background: #fcfcfc;
+          background: var(--bg-base);
           display: flex;
           flex-direction: column;
           font-family: 'Inter', sans-serif;
@@ -450,17 +450,17 @@ export default function Dashboard() {
           align-items: center;
           justify-content: space-between;
           padding: 48px 20px 16px;
-          background: white;
+          background: var(--bg-card);
           z-index: 10;
         }
         .hidden { opacity: 0; }
         .fade-in { animation: fadeIn 0.12s ease-out forwards; }
         @keyframes fadeIn { to { opacity: 1; } }
 
-        .db-title { font-size: 22px; font-weight: 800; color: #111827; letter-spacing: -0.4px; line-height: 1.2; }
+        .db-title { font-size: 22px; font-weight: 800; color: var(--text-primary); letter-spacing: -0.4px; line-height: 1.2; }
         .db-date-btn {
           display: flex; align-items: center; gap: 6px;
-          background: none; border: none; font-size: 13px; color: #6b7280;
+          background: none; border: none; font-size: 13px; color: var(--text-secondary);
           font-weight: 500; font-family: inherit; padding: 0; margin-top: 4px;
           cursor: pointer; transition: transform 0.08s;
         }
@@ -468,12 +468,12 @@ export default function Dashboard() {
         .db-header-actions { display: flex; align-items: center; gap: 12px; }
         .db-bell {
           width: 36px; height: 36px; border-radius: 50%;
-          background: #f3f4f6; border: none; display: flex; align-items: center; justify-content: center;
+          background: var(--bg-input); border: none; display: flex; align-items: center; justify-content: center;
           position: relative; cursor: pointer;
         }
         .db-bell-dot {
           position: absolute; top: 8px; right: 9px; width: 6px; height: 6px;
-          background: #22c55e; border-radius: 50%; border: 1.5px solid #f3f4f6;
+          background: #22c55e; border-radius: 50%; border: 1.5px solid var(--bg-input);
           animation: popBadge 0.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
         }
         @keyframes popBadge { from { transform: scale(0); } to { transform: scale(1); } }
@@ -489,21 +489,21 @@ export default function Dashboard() {
 
         .db-cal-dropdown {
           position: absolute; top: 100%; left: 0; margin-top: 8px;
-          background: white; border-radius: 16px; padding: 16px;
+          background: var(--bg-card); border-radius: 16px; padding: 16px;
           box-shadow: 0 10px 40px rgba(0,0,0,0.1); border: 1px solid rgba(0,0,0,0.05);
           z-index: 50; width: 260px;
         }
-        .db-cal-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 14px; font-weight: 700; color: #111827; }
-        .db-cal-nav { background: #f3f4f6; border: none; width: 26px; height: 26px; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #4b5563; font-weight: 700; transition: background 0.2s; }
+        .db-cal-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 14px; font-weight: 700; color: var(--text-primary); }
+        .db-cal-nav { background: var(--bg-input); border: none; width: 26px; height: 26px; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-secondary); font-weight: 700; transition: background 0.2s; }
         .db-cal-nav:active { background: #e5e7eb; }
         .db-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; }
-        .db-cal-day-name { font-size: 10px; font-weight: 700; color: #9ca3af; margin-bottom: 8px; }
+        .db-cal-day-name { font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; }
         .db-cal-day {
           background: transparent; border: none; border-radius: 50%;
           width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
-          font-size: 12px; font-weight: 600; color: #374151; cursor: pointer; margin: auto; transition: all 0.2s;
+          font-size: 12px; font-weight: 600; color: var(--text-primary); cursor: pointer; margin: auto; transition: all 0.2s;
         }
-        .db-cal-day:hover { background: #f3f4f6; }
+        .db-cal-day:hover { background: var(--bg-input); }
         .db-cal-day.active { background: var(--primary); color: white; box-shadow: 0 4px 10px var(--primary-glow); }
 
         .db-scroll-content {
@@ -526,7 +526,7 @@ export default function Dashboard() {
         }
 
         .db-card {
-          background: white; border-radius: 20px; padding: 18px;
+          background: var(--bg-card); border-radius: 20px; padding: 18px;
           box-shadow: 0 2px 12px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.03);
           transition: transform 0.12s, box-shadow 0.12s;
         }
@@ -534,7 +534,7 @@ export default function Dashboard() {
         .db-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
         
         .db-card-top { display: flex; align-items: center; justify-content: space-between; }
-        .db-card-label { font-size: 11px; font-weight: 700; color: #6b7280; letter-spacing: 0.06em; }
+        .db-card-label { font-size: 11px; font-weight: 700; color: var(--text-secondary); letter-spacing: 0.06em; }
         .db-icon-wrap { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
         
         /* Steps */
@@ -542,26 +542,26 @@ export default function Dashboard() {
         .db-ring-svg { transform: rotate(-90deg) scale(1, -1); }
         .db-ring-progress { transition: stroke-dashoffset 0.7s cubic-bezier(0.2, 0.8, 0.2, 1); }
         .db-ring-text { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .db-ring-val { font-size: 18px; font-weight: 800; color: #111827; line-height: 1.1; }
-        .db-ring-max { font-size: 10px; color: #9ca3af; font-weight: 600; }
+        .db-ring-val { font-size: 18px; font-weight: 800; color: var(--text-primary); line-height: 1.1; }
+        .db-ring-max { font-size: 10px; color: var(--text-muted); font-weight: 600; }
         .db-streak-pill {
           display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px;
           background: #f0fdf4; border-radius: 12px; font-size: 11px; font-weight: 700; color: var(--primary);
           margin-bottom: 12px;
         }
-        .db-card-foot { font-size: 11px; color: #6b7280; }
+        .db-card-foot { font-size: 11px; color: var(--text-secondary); }
 
         /* Sleep */
         .db-sleep-main { margin: 12px 0 16px; }
-        .db-sleep-val { font-size: 24px; font-weight: 800; color: #111827; letter-spacing: -0.5px; line-height: 1.1; }
-        .db-sleep-sub { font-size: 11px; color: #9ca3af; margin-top: 2px; }
+        .db-sleep-val { font-size: 24px; font-weight: 800; color: var(--text-primary); letter-spacing: -0.5px; line-height: 1.1; }
+        .db-sleep-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
         .db-sleep-score { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
         .db-score-circ { width: 32px; height: 32px; border-radius: 50%; background: #6366f1; color: white; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
         .db-score-text { display: flex; flex-direction: column; }
-        .db-score-text strong { font-size: 12px; color: #111827; }
-        .db-score-text span { font-size: 11px; color: #6b7280; }
+        .db-score-text strong { font-size: 12px; color: var(--text-primary); }
+        .db-score-text span { font-size: 11px; color: var(--text-secondary); }
         .db-sleep-stages { display: flex; flex-direction: column; gap: 6px; }
-        .db-stages-lbl { font-size: 10px; color: #9ca3af; font-weight: 600; }
+        .db-stages-lbl { font-size: 10px; color: var(--text-muted); font-weight: 600; }
         .db-stage-bars { display: flex; align-items: flex-end; gap: 4px; height: 28px; }
         .db-sbar {
           flex: 1; background: #818cf8; border-radius: 4px 4px 0 0;
@@ -571,22 +571,22 @@ export default function Dashboard() {
 
         /* Calories */
         .db-cal-title { display: flex; align-items: center; gap: 8px; }
-        .db-card-title { font-size: 16px; font-weight: 700; color: #111827; }
-        .db-card-sub { font-size: 13px; color: #6b7280; }
-        .db-dot-label { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #6b7280; margin-bottom: 4px; }
+        .db-card-title { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+        .db-card-sub { font-size: 13px; color: var(--text-secondary); }
+        .db-dot-label { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-secondary); margin-bottom: 4px; }
         .db-dot { width: 6px; height: 6px; border-radius: 50%; }
-        .db-cal-val strong { font-size: 20px; font-weight: 800; color: #111827; }
-        .db-cal-val span { font-size: 11px; color: #9ca3af; font-weight: 600; }
-        .db-prog-label { display: flex; justify-content: space-between; font-size: 11px; color: #6b7280; margin-bottom: 8px; }
-        .db-cal-bar { height: 10px; background: #f3f4f6; border-radius: 5px; position: relative; overflow: hidden; margin-bottom: 8px; }
+        .db-cal-val strong { font-size: 20px; font-weight: 800; color: var(--text-primary); }
+        .db-cal-val span { font-size: 11px; color: var(--text-muted); font-weight: 600; }
+        .db-prog-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-secondary); margin-bottom: 8px; }
+        .db-cal-bar { height: 10px; background: var(--bg-input); border-radius: 5px; position: relative; overflow: hidden; margin-bottom: 8px; }
         .db-cal-fill-c { position: absolute; left: 0; top: 0; bottom: 0; background: var(--primary-light); border-radius: 5px; transition: width 0.6s ease-out; }
         .db-cal-fill-b { position: absolute; top: 0; bottom: 0; background: var(--primary-bg); border-radius: 0 5px 5px 0; transition: width 0.6s ease-out 0.1s; }
-        .db-prog-foot { display: flex; justify-content: space-between; font-size: 10px; color: #9ca3af; }
+        .db-prog-foot { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-muted); }
 
         /* Weekly Activity */
-        .db-tabs { display: flex; background: #f3f4f6; border-radius: 20px; padding: 2px; }
+        .db-tabs { display: flex; background: var(--bg-input); border-radius: 20px; padding: 2px; }
         .db-tab {
-          padding: 6px 12px; font-size: 11px; font-weight: 600; color: #6b7280;
+          padding: 6px 12px; font-size: 11px; font-weight: 600; color: var(--text-secondary);
           background: transparent; border: none; border-radius: 18px; cursor: pointer; transition: all 0.2s;
         }
         .db-tab.active { background: var(--primary-light); color: white; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
@@ -596,7 +596,7 @@ export default function Dashboard() {
         .db-insights-head { display: flex; align-items: center; justify-content: space-between; margin: 24px 0 16px; }
         .db-link { background: none; border: none; font-size: 13px; font-weight: 600; color: var(--primary); cursor: pointer; }
         .db-insight-card {
-          background: white; border-radius: 16px; padding: 16px; margin-bottom: 12px;
+          background: var(--bg-card); border-radius: 16px; padding: 16px; margin-bottom: 12px;
           display: flex; align-items: flex-start; gap: 14px;
           box-shadow: 0 2px 12px rgba(0,0,0,0.03);
           border-left: 4px solid transparent; cursor: pointer;
@@ -608,10 +608,10 @@ export default function Dashboard() {
         .db-insight-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .db-insight-content { flex: 1; }
         .db-insight-top { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
-        .db-insight-top strong { font-size: 14px; color: #111827; }
+        .db-insight-top strong { font-size: 14px; color: var(--text-primary); }
         .db-insight-badge { font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 8px; }
-        .db-insight-text { font-size: 12.5px; color: #6b7280; line-height: 1.5; }
-        .db-insight-text strong { color: #374151; }
+        .db-insight-text { font-size: 12.5px; color: var(--text-secondary); line-height: 1.5; }
+        .db-insight-text strong { color: var(--text-primary); }
         .skeleton {
           background: linear-gradient(90deg,
             var(--bg-card) 25%,

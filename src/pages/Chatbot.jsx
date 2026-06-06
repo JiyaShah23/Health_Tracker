@@ -296,11 +296,11 @@ export default function Chatbot() {
       <style>{`
         .chat-page {
           display: flex; flex-direction: column; height: 100%;
-          background: #eef5ee; animation: fadeIn 0.3s ease;
+          background: var(--bg-surface); animation: fadeIn 0.3s ease;
         }
         .chat-header {
           display: flex; align-items: center; justify-content: space-between;
-          padding: 16px; border-bottom: 1px solid #e5e7eb;
+          padding: 16px; border-bottom: 1px solid var(--border);
           background: rgba(255,255,255,0.95); backdrop-filter: blur(12px);
           position: sticky; top: 0; z-index: 10;
         }
@@ -311,8 +311,8 @@ export default function Chatbot() {
           display: flex; align-items: center; justify-content: center;
           box-shadow: 0 4px 14px var(--primary-glow);
         }
-        .chat-title { font-size: 16px; font-weight: 800; color: #111827; letter-spacing: -0.2px; }
-        .chat-status { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #6b7280; font-weight: 500; }
+        .chat-title { font-size: 16px; font-weight: 800; color: var(--text-primary); letter-spacing: -0.2px; }
+        .chat-status { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); font-weight: 500; }
         .status-dot {
           width: 7px; height: 7px; border-radius: 50%;
           background: #22c55e; box-shadow: 0 0 6px rgba(34,197,94,0.6);
@@ -325,8 +325,8 @@ export default function Chatbot() {
         .quick-chips::-webkit-scrollbar { display: none; }
         .quick-chips .chip {
           white-space: nowrap; flex-shrink: 0;
-          background: white; border: 1.5px solid #e5e7eb; border-radius: 16px;
-          padding: 6px 12px; font-size: 11px; font-weight: 600; color: #4b5563;
+          background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 16px;
+          padding: 6px 12px; font-size: 11px; font-weight: 600; color: var(--text-secondary);
           display: inline-flex; align-items: center; gap: 4px; cursor: pointer;
           transition: all 0.2s;
         }
@@ -350,55 +350,55 @@ export default function Chatbot() {
         }
         .bubble { border-radius: 18px; padding: 12px 16px; position: relative; }
         .bubble-bot {
-          background: #ffffff; border: 1px solid #e5e7eb;
+          background: var(--bg-card); border: 1px solid var(--border);
           border-bottom-left-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);
         }
         .bubble-user {
           background: var(--primary); border-bottom-right-radius: 4px;
           box-shadow: 0 4px 14px var(--primary-glow);
         }
-        .bubble-text { font-size: 13.5px; line-height: 1.55; color: #111827; white-space: pre-wrap; font-weight: 500; }
+        .bubble-text { font-size: 13.5px; line-height: 1.55; color: var(--text-primary); white-space: pre-wrap; font-weight: 500; }
         .bubble-user .bubble-text { color: #fff; }
-        .bubble-time { font-size: 10px; color: #9ca3af; font-weight: 600; display: block; margin-top: 6px; text-align: right; }
+        .bubble-time { font-size: 10px; color: var(--text-muted); font-weight: 600; display: block; margin-top: 6px; text-align: right; }
         .bubble-user .bubble-time { color: rgba(255,255,255,0.7); }
         .typing-dots { display: flex; gap: 5px; padding: 4px 0; }
         .typing-dots span {
           width: 8px; height: 8px; border-radius: 50%;
-          background: #9ca3af; animation: pulse 1.2s ease infinite;
+          background: var(--text-muted); animation: pulse 1.2s ease infinite;
         }
         .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
         .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
         .chat-input-bar {
           display: flex; align-items: flex-end; gap: 10px;
-          padding: 12px 16px; border-top: 1px solid #e5e7eb;
-          background: #ffffff; margin-bottom: 70px;
+          padding: 12px 16px; border-top: 1px solid var(--border);
+          background: var(--bg-card); margin-bottom: 70px;
         }
         .chat-input-wrap {
           flex: 1; display: flex; align-items: center;
-          background: #f9fafb; border: 1.5px solid #e5e7eb;
+          background: #f9fafb; border: 1.5px solid var(--border);
           border-radius: 22px; padding: 10px 14px; transition: border-color 0.2s;
         }
         .chat-input-wrap:focus-within { border-color: var(--primary); }
         .chat-input {
           flex: 1; background: none; border: none; outline: none;
           resize: none; font-family: 'Inter', sans-serif;
-          font-size: 14px; color: #111827; line-height: 1.4;
+          font-size: 14px; color: var(--text-primary); line-height: 1.4;
           max-height: 100px; scrollbar-width: none;
         }
-        .chat-input::placeholder { color: #9ca3af; }
-        .chat-mic-btn { color: #9ca3af; padding: 0 4px; background: none; border: none; cursor: pointer; }
+        .chat-input::placeholder { color: var(--text-muted); }
+        .chat-mic-btn { color: var(--text-muted); padding: 0 4px; background: none; border: none; cursor: pointer; }
         .chat-mic-btn:hover { color: var(--primary); }
         .chat-send-btn {
           width: 44px; height: 44px; border-radius: 50%;
-          background: #f3f4f6; border: 1.5px solid #e5e7eb;
+          background: var(--bg-input); border: 1.5px solid var(--border);
           display: flex; align-items: center; justify-content: center;
-          cursor: pointer; color: #9ca3af; transition: all 0.2s; flex-shrink: 0;
+          cursor: pointer; color: var(--text-muted); transition: all 0.2s; flex-shrink: 0;
         }
         .chat-send-btn.active {
           background: var(--primary); border-color: transparent; color: white;
           box-shadow: 0 4px 14px var(--primary-glow);
         }
-        .btn-ghost { background: none; border: none; cursor: pointer; color: #9ca3af; }
+        .btn-ghost { background: none; border: none; cursor: pointer; color: var(--text-muted); }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }

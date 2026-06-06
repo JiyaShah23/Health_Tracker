@@ -149,7 +149,7 @@ export default function Login() {
       <style>{`
         .lg-page {
           min-height: 100vh;
-          background: #eef5ee;
+          background: var(--bg-surface);
           position: relative;
           overflow: hidden;
           font-family: 'Inter', sans-serif;
@@ -200,17 +200,17 @@ export default function Login() {
         .lg-title {
           font-size: 26px;
           font-weight: 800;
-          color: #111827;
+          color: var(--text-primary);
           letter-spacing: -0.5px;
         }
         .lg-sub {
           font-size: 13.5px;
-          color: #6b7280;
+          color: var(--text-secondary);
           line-height: 1.55;
           max-width: 260px;
         }
         .lg-card {
-          background: white;
+          background: var(--bg-card);
           border-radius: 24px;
           padding: 28px 24px;
           width: 100%;
@@ -229,7 +229,7 @@ export default function Login() {
         .lg-label {
           font-size: 13px;
           font-weight: 600;
-          color: #374151;
+          color: var(--text-primary);
         }
         .lg-input-wrap {
           position: relative;
@@ -256,19 +256,19 @@ export default function Login() {
         }
         .lg-input {
           width: 100%;
-          border: 1.5px solid #e5e7eb;
+          border: 1.5px solid var(--border);
           border-radius: 12px;
           padding: 13px 14px;
           font-size: 14px;
           font-family: 'Inter', sans-serif;
-          color: #111827;
-          background: white;
+          color: var(--text-primary);
+          background: var(--bg-card);
           outline: none;
           transition: border-color 0.2s;
         }
         .lg-input.icon-left { padding-left: 42px; }
         .lg-input.icon-right { padding-right: 42px; }
-        .lg-input::placeholder { color: #9ca3af; }
+        .lg-input::placeholder { color: var(--text-muted); }
         .lg-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-glow); }
         .lg-forgot-row {
           display: flex;
@@ -317,7 +317,7 @@ export default function Login() {
           display: flex;
           align-items: center;
           gap: 10px;
-          color: #9ca3af;
+          color: var(--text-muted);
           font-size: 11px;
           font-weight: 600;
           letter-spacing: 0.08em;
@@ -347,15 +347,15 @@ export default function Login() {
         }
         .lg-social.apple:hover { background: #1f2937; }
         .lg-social.google {
-          background: white;
-          color: #111827;
-          border: 1.5px solid #e5e7eb;
+          background: var(--bg-card);
+          color: var(--text-primary);
+          border: 1.5px solid var(--border);
         }
         .lg-social.google:hover { background: #f9fafb; }
         .lg-signup-link {
           text-align: center;
           font-size: 13px;
-          color: #9ca3af;
+          color: var(--text-muted);
           margin-top: 2px;
         }
         .lg-link-btn {
