@@ -1,21 +1,11 @@
-
 import { useState, useRef, useEffect, useContext } from 'react';
 import { Send, Mic, Sparkles, RefreshCw } from 'lucide-react';
 import { DataContext, AuthContext } from '../App';
 import { getTodayKey, calcSleepHours } from '../utils/dateUtils';
-
-
+import AppLogo from '../components/AppLogo';
 
 function VitaIcon({ size = 24 }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" width={size} height={size}>
-      <path
-        d="M17 8C8 10 5.9 16.17 3.82 19.92C3.26 20.94 4.27 22 5.38 21.6C8.81 20.37 14.13 17.5 17 12C17 12 20 8 17 2C17 2 17 5.5 17 8Z"
-        fill="white" stroke="white" strokeWidth="0.5" strokeLinejoin="round"
-      />
-      <path d="M3.5 20C5 17 8.5 13.5 17 8" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  );
+  return <AppLogo size={size} color="white" />;
 }
 
 const QUICK_PROMPTS = [

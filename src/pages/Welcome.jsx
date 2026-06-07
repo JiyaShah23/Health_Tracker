@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, User, Activity, Moon, Flame, Heart } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
+import AppLogo from '../components/AppLogo';
 
 const SLIDES = [
   {
@@ -83,7 +84,7 @@ export default function Welcome() {
       <div className="wlc-header">
         <div className="wlc-logo">
           <div className="wlc-logo-icon">
-            <Activity size={16} color="white" />
+            <AppLogo size={18} color="white" />
           </div>
           <span className="wlc-logo-text">VitalAI</span>
         </div>

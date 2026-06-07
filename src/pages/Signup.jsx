@@ -2,22 +2,7 @@ import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../App';
 import { Eye, EyeOff } from 'lucide-react';
-
-/* ── Leaf SVG icon ── */
-function LeafIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" width="28" height="28">
-      <path
-        d="M17 8C8 10 5.9 16.17 3.82 19.92C3.26 20.94 4.27 22 5.38 21.6C8.81 20.37 14.13 17.5 17 12C17 12 20 8 17 2C17 2 17 5.5 17 8Z"
-        fill="white"
-        stroke="white"
-        strokeWidth="0.5"
-        strokeLinejoin="round"
-      />
-      <path d="M3.5 20C5 17 8.5 13.5 17 8" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  );
-}
+import AppLogo from '../components/AppLogo';
 
 /* ── Google G ── */
 function GoogleG() {
@@ -26,7 +11,7 @@ function GoogleG() {
       <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 01-1.796 2.716v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z" />
       <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.185l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z" />
       <path fill="#FBBC05" d="M3.964 10.706A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.706V4.962H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.038l3.007-2.332z" />
-      <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.962L3.964 7.294C4.672 5.163 6.656 3.58 9 3.58z" />
+      <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.962L3.964 7.294C4.672 5.163 6.656 3.58l9 3.58z" />
     </svg>
   );
 }
@@ -86,10 +71,7 @@ export default function Signup() {
       <div className="lg-left-panel" style={{ display: 'none' }}
         ref={el => { if (el) el.style.display = window.innerWidth >= 768 ? 'flex' : 'none'; }}>
         <div className="lg-logo-circle" style={{ width: 80, height: 80, marginBottom: 8 }}>
-          <svg viewBox="0 0 24 24" fill="none" width="36" height="36">
-            <path d="M17 8C8 10 5.9 16.17 3.82 19.92C3.26 20.94 4.27 22 5.38 21.6C8.81 20.37 14.13 17.5 17 12C17 12 20 8 17 2C17 2 17 5.5 17 8Z" fill="white" stroke="white" strokeWidth="0.5" />
-            <path d="M3.5 20C5 17 8.5 13.5 17 8" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
-          </svg>
+          <AppLogo size={36} color="white" />
         </div>
         <h1 className="lg-left-title">Your AI Health<br />Coach Awaits</h1>
         <p className="lg-left-sub">Track your wellness journey with personalized AI insights powered by VitalAI.</p>
@@ -113,7 +95,7 @@ export default function Signup() {
         {/* Logo */}
         <div className="su-logo-wrap">
           <div className="su-logo-box">
-            <LeafIcon />
+            <AppLogo size={28} color="white" />
           </div>
           <h1 className="su-brand">VitalAI</h1>
           <p className="su-tagline">Your AI-powered health companion</p>

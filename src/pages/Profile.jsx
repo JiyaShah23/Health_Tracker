@@ -7,6 +7,7 @@ import {
   ArrowLeft, Edit3, Mail, Phone, Calendar, 
   Bell, Shield, Globe, Lock, LogOut, ChevronRight 
 } from 'lucide-react';
+import AppLogo from '../components/AppLogo';
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -208,7 +209,7 @@ export default function Profile() {
         </button>
 
         <div className={`prof-footer stagger-11 ${mounted ? 'active' : ''}`}>
-          VitalAI v1.0.0 · Made with <svg viewBox="0 0 24 24" width="12" height="12" fill="#4a7c59" stroke="#4a7c59" strokeWidth="0.5"><path d="M17 8C8 10 5.9 16.17 3.82 19.92C3.26 20.94 4.27 22 5.38 21.6C8.81 20.37 14.13 17.5 17 12C17 12 20 8 17 2C17 2 17 5.5 17 8Z"/><path d="M3.5 20C5 17 8.5 13.5 17 8" stroke="white" strokeWidth="1.5" strokeLinecap="round"/></svg>
+          VitalAI v1.0.0 · Made with <AppLogo size={12} color="#4a7c59" />
         </div>
 
       </div>
