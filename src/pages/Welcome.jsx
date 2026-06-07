@@ -535,6 +535,172 @@ export default function Welcome() {
           border-color: #22c55e;
           color: #22c55e;
         }
+
+        /* Tablet — centered card */
+        @media (min-width: 768px) and (max-width: 1199px) {
+          .wlc-page {
+            max-width: 430px;
+            margin: 0 auto;
+            min-height: 100vh;
+            background: #f1f7f1;
+          }
+          body {
+            background: linear-gradient(135deg, #e8f5e9, #f0fdf4, #e3f2fd);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+          }
+        }
+
+        /* Desktop — two column layout */
+        @media (min-width: 1200px) {
+          .wlc-page {
+            max-width: 100%;
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto;
+            padding: 0;
+            align-items: stretch;
+            background: white;
+          }
+
+          /* Left side — illustration + branding */
+          .wlc-header {
+            grid-column: 1;
+            grid-row: 1;
+            padding: 48px 60px 0;
+            background: linear-gradient(145deg, #2d6a4f, #4a7c59);
+          }
+          .wlc-logo-text { color: white; }
+          .wlc-skip {
+            background: rgba(255,255,255,0.2);
+            color: white;
+          }
+          .wlc-blob-1, .wlc-blob-2, .wlc-blob-3 { display: none; }
+
+          .wlc-card-wrap {
+            grid-column: 1;
+            grid-row: 2 / 6;
+            max-width: 100%;
+            background: linear-gradient(145deg, #2d6a4f, #4a7c59);
+            border-radius: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 60px;
+            margin: 0;
+          }
+
+          .wlc-img-card {
+            width: 320px;
+            height: 320px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+          }
+
+          .wlc-float-tr {
+            right: 20px;
+            top: 40px;
+            background: white;
+          }
+          .wlc-float-bl {
+            left: 20px;
+            bottom: 60px;
+            background: white;
+          }
+
+          /* Right side — text + actions */
+          .wlc-dots {
+            grid-column: 2;
+            grid-row: 1;
+            padding: 60px 60px 0;
+            justify-content: flex-start;
+            margin: 0;
+          }
+
+          .wlc-progress {
+            grid-column: 2;
+            grid-row: 2;
+            margin: 0;
+            padding: 0 60px;
+            width: auto;
+          }
+
+          .wlc-text {
+            grid-column: 2;
+            grid-row: 3;
+            text-align: left;
+            padding: 32px 60px 0;
+            margin: 0;
+          }
+
+          .wlc-title {
+            font-size: 44px;
+            letter-spacing: -1px;
+          }
+
+          .wlc-sub {
+            max-width: 380px;
+            margin: 0;
+            font-size: 16px;
+          }
+
+          .wlc-features {
+            grid-column: 2;
+            grid-row: 4;
+            max-width: 100%;
+            margin: 0;
+            padding: 24px 60px;
+            background: none;
+            box-shadow: none;
+            border-radius: 0;
+            justify-content: flex-start;
+            gap: 24px;
+          }
+
+          .wlc-feature {
+            flex: 0;
+            flex-direction: row;
+            gap: 10px;
+            align-items: center;
+          }
+
+          .wlc-feature::after { display: none; }
+
+          .wlc-feature-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+          }
+
+          .wlc-feature-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+          }
+
+          .wlc-actions {
+            grid-column: 2;
+            grid-row: 5;
+            max-width: 400px;
+            padding: 0 60px 60px;
+            margin: 0;
+            justify-content: flex-start;
+          }
+
+          .wlc-btn-primary {
+            width: auto;
+            padding: 16px 48px;
+          }
+
+          .wlc-btn-secondary {
+            width: auto;
+            padding: 15px 48px;
+          }
+        }
       `}</style>
     </div>
   );
