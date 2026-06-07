@@ -54,6 +54,32 @@ export default function Login() {
       {/* Green glow blob top-left */}
       <div className="lg-blob" />
 
+      {/* Left panel — only visible on desktop */}
+      <div className="lg-left-panel" style={{ display: 'none' }} 
+        ref={el => { if (el) el.style.display = window.innerWidth >= 768 ? 'flex' : 'none'; }}>
+        <div className="lg-logo-circle" style={{ width: 80, height: 80, marginBottom: 8 }}>
+          <svg viewBox="0 0 24 24" fill="none" width="36" height="36">
+            <path d="M17 8C8 10 5.9 16.17 3.82 19.92C3.26 20.94 4.27 22 5.38 21.6C8.81 20.37 14.13 17.5 17 12C17 12 20 8 17 2C17 2 17 5.5 17 8Z" fill="white" stroke="white" strokeWidth="0.5"/>
+            <path d="M3.5 20C5 17 8.5 13.5 17 8" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+          </svg>
+        </div>
+        <h1 className="lg-left-title">Your AI Health<br />Coach Awaits</h1>
+        <p className="lg-left-sub">Track your wellness journey with personalized AI insights powered by VitalAI.</p>
+        <div className="lg-feature-list">
+          {[
+            { e: '🏃', t: 'Track steps & activity' },
+            { e: '💧', t: 'Monitor hydration' },
+            { e: '🌙', t: 'Analyze sleep patterns' },
+            { e: '🤖', t: 'AI-powered coaching' },
+          ].map((f, i) => (
+            <div key={i} className="lg-feature-item">
+              <span style={{ fontSize: 20 }}>{f.e}</span>
+              {f.t}
+            </div>
+          ))}
+        </div>
+      </div>
+
       <div className="lg-inner">
         {/* Logo */}
         <div className="lg-logo-wrap">
@@ -376,6 +402,65 @@ export default function Login() {
           border-top-color: white;
           border-radius: 50%;
           animation: spin 0.7s linear infinite;
+        }
+        @media (min-width: 768px) {
+          .lg-page {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: stretch;
+            padding: 0;
+          }
+          .lg-inner {
+            max-width: 100%;
+            padding: 60px 48px;
+            justify-content: center;
+            height: 100vh;
+            overflow-y: auto;
+          }
+          .lg-left-panel {
+            background: linear-gradient(135deg, #2d6a4f, #4a7c59);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 48px;
+            color: white;
+            gap: 24px;
+          }
+          .lg-left-title {
+            font-size: 36px;
+            font-weight: 800;
+            color: white;
+            line-height: 1.2;
+            letter-spacing: -0.5px;
+            text-align: center;
+          }
+          .lg-left-sub {
+            font-size: 16px;
+            color: rgba(255,255,255,0.8);
+            text-align: center;
+            line-height: 1.6;
+            max-width: 320px;
+          }
+          .lg-feature-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 16px;
+            width: 100%;
+            max-width: 320px;
+          }
+          .lg-feature-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+          }
         }
       `}</style>
     </div>

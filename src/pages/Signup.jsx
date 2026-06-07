@@ -82,6 +82,32 @@ export default function Signup() {
       {/* Green blob */}
       <div className="su-blob" />
 
+      {/* Left panel — only visible on desktop */}
+      <div className="lg-left-panel" style={{ display: 'none' }}
+        ref={el => { if (el) el.style.display = window.innerWidth >= 768 ? 'flex' : 'none'; }}>
+        <div className="lg-logo-circle" style={{ width: 80, height: 80, marginBottom: 8 }}>
+          <svg viewBox="0 0 24 24" fill="none" width="36" height="36">
+            <path d="M17 8C8 10 5.9 16.17 3.82 19.92C3.26 20.94 4.27 22 5.38 21.6C8.81 20.37 14.13 17.5 17 12C17 12 20 8 17 2C17 2 17 5.5 17 8Z" fill="white" stroke="white" strokeWidth="0.5" />
+            <path d="M3.5 20C5 17 8.5 13.5 17 8" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
+          </svg>
+        </div>
+        <h1 className="lg-left-title">Your AI Health<br />Coach Awaits</h1>
+        <p className="lg-left-sub">Track your wellness journey with personalized AI insights powered by VitalAI.</p>
+        <div className="lg-feature-list">
+          {[
+            { e: '🏃', t: 'Track steps & activity' },
+            { e: '💧', t: 'Monitor hydration' },
+            { e: '🌙', t: 'Analyze sleep patterns' },
+            { e: '🤖', t: 'AI-powered coaching' },
+          ].map((f, i) => (
+            <div key={i} className="lg-feature-item">
+              <span style={{ fontSize: 20 }}>{f.e}</span>
+              {f.t}
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Scrollable content */}
       <div className="su-scroll">
         {/* Logo */}
@@ -122,8 +148,8 @@ export default function Signup() {
               <label className="su-label">Email</label>
               <div className="su-input-wrap">
                 <svg className="su-icon" viewBox="0 0 20 20" fill="none">
-                  <rect x="2" y="4" width="16" height="12" rx="2" stroke="#9ca3af" strokeWidth="1.5"/>
-                  <path d="M2 7l8 5 8-5" stroke="#9ca3af" strokeWidth="1.5" strokeLinecap="round"/>
+                  <rect x="2" y="4" width="16" height="12" rx="2" stroke="#9ca3af" strokeWidth="1.5" />
+                  <path d="M2 7l8 5 8-5" stroke="#9ca3af" strokeWidth="1.5" strokeLinecap="round" />
                 </svg>
                 <input className={`su-input icon-left ${errors.email ? 'su-err' : ''}`}
                   type="email" placeholder="you@example.com" value={form.email}
@@ -137,22 +163,22 @@ export default function Signup() {
               <label className="su-label">Password</label>
               <div className="su-input-wrap">
                 <svg className="su-icon" viewBox="0 0 20 20" fill="none">
-                  <circle cx="10" cy="10" r="7" stroke="#9ca3af" strokeWidth="1.5"/>
-                  <circle cx="10" cy="10" r="2" fill="#9ca3af"/>
+                  <circle cx="10" cy="10" r="7" stroke="#9ca3af" strokeWidth="1.5" />
+                  <circle cx="10" cy="10" r="2" fill="#9ca3af" />
                 </svg>
                 <input className={`su-input icon-left icon-right ${errors.password ? 'su-err' : ''}`}
                   type={showPw ? 'text' : 'password'}
                   placeholder="Create a strong password"
                   value={form.password} onChange={e => set('password', e.target.value)} />
                 <button type="button" className="su-eye" onClick={() => setShowPw(!showPw)}>
-                  {showPw ? <EyeOff size={17} color="#9ca3af"/> : <Eye size={17} color="#9ca3af"/>}
+                  {showPw ? <EyeOff size={17} color="#9ca3af" /> : <Eye size={17} color="#9ca3af" />}
                 </button>
               </div>
               {/* Strength bars */}
               {form.password.length > 0 && (
                 <div className="su-strength-wrap">
                   <div className="su-bars">
-                    {[1,2,3,4].map(i => (
+                    {[1, 2, 3, 4].map(i => (
                       <div key={i} className="su-bar"
                         style={{ background: i <= strength.level ? strength.color : '#e5e7eb' }} />
                     ))}
@@ -164,7 +190,7 @@ export default function Signup() {
                 </div>
               )}
               {!form.password && (
-                <div className="su-strength-row" style={{marginTop:4}}>
+                <div className="su-strength-row" style={{ marginTop: 4 }}>
                   <span></span>
                   <span className="su-hint">Use 8+ chars, symbols</span>
                 </div>
@@ -177,15 +203,15 @@ export default function Signup() {
               <label className="su-label">Confirm Password</label>
               <div className="su-input-wrap">
                 <svg className="su-icon" viewBox="0 0 20 20" fill="none">
-                  <circle cx="10" cy="10" r="7" stroke="#9ca3af" strokeWidth="1.5"/>
-                  <circle cx="10" cy="10" r="2" fill="#9ca3af"/>
+                  <circle cx="10" cy="10" r="7" stroke="#9ca3af" strokeWidth="1.5" />
+                  <circle cx="10" cy="10" r="2" fill="#9ca3af" />
                 </svg>
                 <input className={`su-input icon-left icon-right ${errors.confirm ? 'su-err' : ''}`}
                   type={showCf ? 'text' : 'password'}
                   placeholder="Repeat your password"
                   value={form.confirm} onChange={e => set('confirm', e.target.value)} />
                 <button type="button" className="su-eye" onClick={() => setShowCf(!showCf)}>
-                  {showCf ? <EyeOff size={17} color="#9ca3af"/> : <Eye size={17} color="#9ca3af"/>}
+                  {showCf ? <EyeOff size={17} color="#9ca3af" /> : <Eye size={17} color="#9ca3af" />}
                 </button>
               </div>
               {errors.confirm && <span className="su-ferr">{errors.confirm}</span>}
@@ -200,18 +226,18 @@ export default function Signup() {
                 <a href="#" className="su-link">Privacy Policy</a> of VitalAI
               </span>
             </label>
-            {errors.agreed && <span className="su-ferr" style={{marginTop:-8}}>{errors.agreed}</span>}
+            {errors.agreed && <span className="su-ferr" style={{ marginTop: -8 }}>{errors.agreed}</span>}
 
             {/* Sign Up Button */}
             <button type="submit" className="su-btn-primary" disabled={loading} id="signup-submit">
               {loading
                 ? <span className="su-spinner" />
                 : <>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style={{marginRight:6}}>
-                      <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" fill="white"/>
-                    </svg>
-                    Sign Up
-                  </>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style={{ marginRight: 6 }}>
+                    <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" fill="white" />
+                  </svg>
+                  Sign Up
+                </>
               }
             </button>
 
@@ -221,7 +247,7 @@ export default function Signup() {
             {/* Social buttons */}
             <button type="button" className="su-social-btn apple">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
               </svg>
               Continue with Apple
             </button>
@@ -238,7 +264,7 @@ export default function Signup() {
             </p>
           </form>
         </div>
-        <div style={{height: 24}} />
+        <div style={{ height: 24 }} />
       </div>
 
       <style>{`
@@ -490,6 +516,65 @@ export default function Signup() {
           border-top-color: white;
           border-radius: 50%;
           animation: spin 0.7s linear infinite;
+        }
+        @media (min-width: 768px) {
+          .su-page {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: stretch;
+            padding: 0;
+          }
+          .su-scroll {
+            max-width: 100%;
+            padding: 60px 48px;
+            justify-content: center;
+            height: 100vh;
+            overflow-y: auto;
+          }
+          .lg-left-panel {
+            background: linear-gradient(135deg, #2d6a4f, #4a7c59);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 48px;
+            color: white;
+            gap: 24px;
+          }
+          .lg-left-title {
+            font-size: 36px;
+            font-weight: 800;
+            color: white;
+            line-height: 1.2;
+            letter-spacing: -0.5px;
+            text-align: center;
+          }
+          .lg-left-sub {
+            font-size: 16px;
+            color: rgba(255,255,255,0.8);
+            text-align: center;
+            line-height: 1.6;
+            max-width: 320px;
+          }
+          .lg-feature-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 16px;
+            width: 100%;
+            max-width: 320px;
+          }
+          .lg-feature-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+          }
         }
       `}</style>
     </div>
